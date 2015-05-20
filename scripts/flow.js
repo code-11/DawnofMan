@@ -14,14 +14,29 @@ flow.Point.prototype.display_conns = function(){
 	console.log(this.name + " contains:");
 	console.log(this.conns);
 };
-flow.Point.prototype.display = function(){
-	console.log(this.name + "," + this.value);
+flow.Point.prototype.display = function(ticks){
+	if(ticks!=undefined){
+		console.log(this.name + "," + this.value+" at tick "+ticks);
+	}else{
+		console.log(this.name + "," + this.value);
+	}
 };
-flow.Point.prototype.val_display = function(){
-	console.log(this.value);
+flow.Point.prototype.val_display = function(ticks){
+	if(ticks!=undefined){
+		console.log(this.value+" at tick "+ticks);
+	}else{
+		console.log(this.value);
+	}
 }
+flow.Point.prototype.pre_calc=function(){};
+flow.Point.prototype.post_calc=function(){};
 flow.Point.prototype.calc=function(){
-	this.value=comb.add(this.conns,this.value,false);
+		this.value=comb.add(this.conns,this.value,false);
+};
+flow.Point.prototype.full_calc=function(){
+		this.pre_calc();
+		this.calc();
+		this.post_calc();
 };
 
 //Rates don't accumulate, they are set every step.
@@ -74,6 +89,16 @@ flow.Sub.prototype=Object.create(flow.Point.prototype);
 flow.Sub.prototype.calc=function(){
 	this.value=comb.sub(this.conns,this.value);
 };
+
+//Modifies a point's calc function so that after calcuation it checks a lower bound. iF bound is reached, value is set.
+flow.add_low_shift=function(point,bound,bound_set){
+	point.post_calc=function(){
+		if (point.value<bound){
+			point.value=bound_set;
+		}
+	}
+}
+
 
 
 return flow});
