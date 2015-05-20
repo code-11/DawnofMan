@@ -6,6 +6,7 @@ flow.Point = function(name,init_val){
 	this.value = init_val;
 	//All connections to this point
 	this.conns = [];
+	this.debug=false;
 };
 flow.Point.prototype.conn_to= function(o_point,weight){
 		o_point.conns.push([this,weight]);
@@ -31,7 +32,7 @@ flow.Point.prototype.val_display = function(ticks){
 flow.Point.prototype.pre_calc=function(){};
 flow.Point.prototype.post_calc=function(){};
 flow.Point.prototype.calc=function(){
-		this.value=comb.add(this.conns,this.value,false);
+		this.value=comb.add(this,false);
 };
 flow.Point.prototype.full_calc=function(){
 		this.pre_calc();
@@ -46,11 +47,12 @@ flow.Rate = function(name,init_val){
 	this.value = init_val;
 	//All connections to this point
 	this.conns = [];
+	this.debug=false;
 };
 //Extend superclass
 flow.Rate.prototype=Object.create(flow.Point.prototype);
 flow.Rate.prototype.calc=function(){
-	this.value=comb.add(this.conns,this.value,true);
+	this.value=comb.add(this,true);
 };
 
 
@@ -59,11 +61,12 @@ flow.Mult =function(name,init_val){
 	this.value = init_val;
 	//All connections to this point
 	this.conns = [];
+	this.debug=false;
 };
 //Extend superclass
 flow.Mult.prototype=Object.create(flow.Point.prototype);
 flow.Mult.prototype.calc=function(){
-	this.value=comb.mult(this.conns,this.value);
+	this.value=comb.mult(this);
 };
 
 flow.Source =function(name,init_val){
@@ -71,11 +74,12 @@ flow.Source =function(name,init_val){
 	this.value = init_val;
 	//All connections to this point
 	this.conns = [];
+	this.debug=false;
 };
 //Extend superclass
 flow.Source.prototype=Object.create(flow.Point.prototype);
 flow.Source.prototype.calc=function(){
-	this.value=comb.no_input(this.conns,this.value);
+	this.value=comb.no_input(this);
 };
 
 flow.Sub =function(name,init_val){
@@ -83,22 +87,52 @@ flow.Sub =function(name,init_val){
 	this.value = init_val;
 	//All connections to this point
 	this.conns = [];
+	this.debug=false;
 };
 //Extend superclass
 flow.Sub.prototype=Object.create(flow.Point.prototype);
 flow.Sub.prototype.calc=function(){
-	this.value=comb.sub(this.conns,this.value);
+	this.value=comb.sub(this);
 };
 
-//Modifies a point's calc function so that after calcuation it checks a lower bound. iF bound is reached, value is set.
-flow.add_low_shift=function(point,bound,bound_set){
-	point.post_calc=function(){
-		if (point.value<bound){
-			point.value=bound_set;
-		}
-	}
+flow.Dup=function(name){
+	this.name=name;
+	this.value=0;
+	this.conns=[];
+	this.debug=false;
 }
+flow.Dup.prototype=Object.create(flow.Point.prototype);
+flow.Dup.prototype.calc=function(){
+	this.value=comb.dup(this);
+};
 
+flow.LowClamp=function(name,point,value,fudge){
+	this.value=value;
+	this.target=point;
+	this.debug=false;
+	this.fudge=fudge;
+	this.name=point.name+" Clamp";
+}
+flow.LowClamp.prototype.full_calc=function(){
+	comb.low_clamp(this);
+};
+flow.LowClamp.prototype.display=function(){};
+
+flow.HighClamp=function(name,point,value,fudge){
+	this.value=value;
+	this.target=point;
+	this.debug=false;
+	this.fudge=fudge;
+	this.name=point.name+" Clamp";
+}
+flow.HighClamp.prototype=Object.create(flow.LowClamp.prototype);
+flow.HighClamp.prototype.full_calc=function(){
+	comb.high_clamp(this);
+};
+
+flow.debug=function(point){
+	point.debug=true;
+}
 
 
 return flow});

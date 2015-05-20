@@ -36,21 +36,46 @@ function hunger_test(){
 	return [nat_pop_rate,pop_rate,pop_delta,pop,food,hunger];
 }
 
-var all_points=hunger_test();
-for (var j = 0;j < 2000;j += 1){
+function thirst_test(){
+	var pop_delta   = new flow.Mult("Pop Delta"    ,1);
+	var nat_pop_rate= new flow.Source("Nat Pop Rate",.003);//realistic is .00003
+	var pop_rate    = new flow.Rate("Pop Rate"     ,0);
+	var pop         = new flow.Point("Pop Unit"    ,90);
+	var pop_clamp   = new flow.LowClamp("Pop Clamp",pop,1,-1);
+	var water       = new flow.Rate("Water"        ,0);
+	var water_inflow= new flow.Source("Water Inflow",10);
+	var water_clamp = new flow.LowClamp("Water Clamp",water,0,0);
+	var thirst      = new flow.Dup("Thirst"        ,0);
+	var thirst_clamp= new flow.LowClamp("Thirst Clamp",thirst,0,0); 
+
+	// flow.debug(water);
+	//flow.debug(thirst);
+
+	pop.conn_to(pop_delta,1);
+	pop_rate.conn_to(pop_delta,1);
+	pop_delta.conn_to(pop,1);
+	nat_pop_rate.conn_to(pop_rate,1);
+
+	pop.conn_to(water,-1);
+	water_inflow.conn_to(water,1);
+	water.conn_to(thirst,-1);
+
+	thirst.conn_to(pop,-.1);
+	return [nat_pop_rate,pop_rate,pop_delta,pop,pop_clamp,water_inflow,water,thirst,water_clamp,thirst_clamp];
+}
+
+//var all_points=hunger_test();
+var all_points=thirst_test();
+for (var j = 0;j < 1000;j += 1){
 	for(var i = 0;i < all_points.length;i += 1){
 		var point = all_points[i];
 		point.full_calc();
-		
-		// if (shelter.value>(2*pop.value)){
-		// 	shelter.value=2*pop.value;
-		// }
-
-		if (point.name=="Pop Unit"){//||point.name=="Hunger"||point.name=="Food Unit"){//||point.name=="Exposure"){
-			point.val_display();
-		}
 	}
-	//console.log("----------- "+(j+1));
+	for(var k=0;k<all_points.length;k+=1){
+		var point=all_points[k];
+		point.display();
+	}
+	console.log("----------- "+(j+1));
 }
 
 });
