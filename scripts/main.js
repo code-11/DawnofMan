@@ -41,12 +41,12 @@ function thirst_test(){
 	var nat_pop_rate= new flow.Source("Nat Pop Rate",.003);//realistic is .00003
 	var pop_rate    = new flow.Rate("Pop Rate"     ,0);
 	var pop         = new flow.Point("Pop Unit"    ,90);
-	var pop_clamp   = new flow.LowClamp("Pop Clamp",pop,1,-1);
+	var pop_clamp   = new flow.LowClamp(pop,1,-1);
 	var water       = new flow.Rate("Water"        ,0);
 	var water_inflow= new flow.Source("Water Inflow",10);
-	var water_clamp = new flow.LowClamp("Water Clamp",water,0,0);
+	var water_clamp = new flow.LowClamp(water,0,0);
 	var thirst      = new flow.Dup("Thirst"        ,0);
-	var thirst_clamp= new flow.LowClamp("Thirst Clamp",thirst,0,0); 
+	var thirst_clamp= new flow.LowClamp(thirst,0,0); 
 
 	// flow.debug(water);
 	//flow.debug(thirst);
@@ -63,10 +63,41 @@ function thirst_test(){
 	thirst.conn_to(pop,-.1);
 	return [nat_pop_rate,pop_rate,pop_delta,pop,pop_clamp,water_inflow,water,thirst,water_clamp,thirst_clamp];
 }
+function shelter_test(){
+	var pop_delta   = new flow.Mult("Pop Delta"    ,1);
+	var nat_pop_rate= new flow.Source("Nat Pop Rate",.003);//realistic is .00003
+	var pop_rate    = new flow.Rate("Pop Rate"     ,0);
+	var pop         = new flow.Point("Pop Unit"    ,90);
+	var pop_clamp   = new flow.LowClamp(pop,1,-1);
+	var eff         = new flow.Mult("Efficiency"   ,1);
+	var nat_eff     = new flow.Source("Nat Efficiency",10);
+	var work        = new flow.Rate("Work"         ,0);
+	var shelter     = new flow.Point("Shelter"     ,0);
+	var exposure    = new flow.Rate("Exposure"     ,0);
+	var exposure_clamp=new flow.LowClamp(exposure,0,0);
+
+	pop.conn_to(pop_delta,1);
+	pop_rate.conn_to(pop_delta,1);
+	pop_delta.conn_to(pop,1);
+	nat_pop_rate.conn_to(pop_rate,1);
+
+	pop.conn_to(eff,1);
+	nat_eff.conn_to(eff,1);
+
+	eff.conn_to(work,1);
+	work.conn_to(shelter,.01);
+	shelter.conn_to(exposure,-1);
+	pop.conn_to(exposure,1);
+
+	exposure.conn_to(pop,-.03);
+
+	return [nat_pop_rate,pop_rate,pop_delta,pop,pop_clamp,nat_eff,eff,work,shelter,exposure,exposure_clamp];
+}
 
 //var all_points=hunger_test();
-var all_points=thirst_test();
-for (var j = 0;j < 1000;j += 1){
+//var all_points=thirst_test();
+all_points=shelter_test();
+for (var j = 0;j < 100;j += 1){
 	for(var i = 0;i < all_points.length;i += 1){
 		var point = all_points[i];
 		point.full_calc();

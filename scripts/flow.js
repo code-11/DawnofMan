@@ -106,7 +106,7 @@ flow.Dup.prototype.calc=function(){
 	this.value=comb.dup(this);
 };
 
-flow.LowClamp=function(name,point,value,fudge){
+flow.LowClamp=function(point,value,fudge){
 	this.value=value;
 	this.target=point;
 	this.debug=false;
@@ -118,7 +118,7 @@ flow.LowClamp.prototype.full_calc=function(){
 };
 flow.LowClamp.prototype.display=function(){};
 
-flow.HighClamp=function(name,point,value,fudge){
+flow.HighClamp=function(point,value,fudge){
 	this.value=value;
 	this.target=point;
 	this.debug=false;
