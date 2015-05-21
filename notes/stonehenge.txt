@@ -1,0 +1,32 @@
+-Civilization in 7000 had
+	-fishing 
+	-hunting
+	-gathering
+-Civilization in 4700 had
+	-domesticated crops
+		-ploughing
+		-sowing
+		-harvesting
+	-domesticated animals
+	-pottery
+	-ceremonial monuments
+	-tombs
+
+4700      Mesolithic (paleolithic?)
+4700-4300  Pioneer Phase
+4300-3600  Early Neolithic
+3600-3200  Middle Neolithic
+3200-2000  Late Neolithic
+2000       Beginning of Bronze Age
+
+-Vegetation is default if it can grow there
+	-humans don't nessesarily like living in forrests
+	-would have moved to open areas in forest
+	-would also have chopped and burned to clear
+		-three men 500 square meters in 4 hours using flint axes
+		-tree ringing(?)
+		-let wild animals loose to trample seedlings
+		-could also burn
+-grown crops deplete the ground nutrients quickly 
+	-would have to move on
+	-leave cleared area for things to regrow
