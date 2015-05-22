@@ -93,20 +93,115 @@ function shelter_test(){
 
 	return [nat_pop_rate,pop_rate,pop_delta,pop,pop_clamp,nat_eff,eff,work,shelter,exposure,exposure_clamp];
 }
+function disconnect_test(){
+	var pop_delta   = new flow.Mult("Pop Delta"    ,1);
+	var nat_pop_rate= new flow.Source("Nat Pop Rate",.003);//realistic is .00003
+	var pop_rate    = new flow.Rate("Pop Rate"     ,0);
+	var pop         = new flow.Point("Pop Unit"    ,90);
 
+	pop.conn_to(pop_delta,1);
+	pop_rate.conn_to(pop_delta,1);
+	pop_delta.conn_to(pop,1);
+	nat_pop_rate.conn_to(pop_rate,1);
+
+	return [nat_pop_rate,pop_rate,pop_delta,pop];
+}
+
+function disconnect_test_full(){
+	var all_points=disconnect_test();
+	for (var j = 0;j < 100;j += 1){
+		if (j==50){
+			all_points[0].break_conn_to(all_points[1]);
+		}
+		for(var i = 0;i < all_points.length;i += 1){
+			var point = all_points[i];
+			point.full_calc();
+		}
+		for(var k=0;k<all_points.length;k+=1){
+			var point=all_points[k];
+			if(k==1){
+				point.display_conns();
+			}
+			point.display();
+		}
+		console.log("----------- "+(j+1));
+	}
+}
+
+function choice_test(){
+	var pop_delta   = new flow.Mult("Pop Delta"    ,1);
+	var nat_pop_rate= new flow.Source("Nat Pop Rate",.003);//realistic is .00003
+	var nat_pop_rate2= new flow.Source("Nat Pop Rate2",0);
+	var nat_pop_rate3= new flow.Source("Nat Pop Rate3",-.003);
+	var pop_rate    = new flow.Rate("Pop Rate"     ,0);
+	var pop         = new flow.Point("Pop Unit"    ,90);
+
+	var opt1=function(){
+		nat_pop_rate2.break_conn_to(pop_rate);
+		nat_pop_rate3.break_conn_to(pop_rate);
+		nat_pop_rate.conn_to(pop_rate,1);
+	};
+	var opt2=function(){
+		nat_pop_rate.break_conn_to(pop_rate);
+		nat_pop_rate3.break_conn_to(pop_rate);
+		nat_pop_rate2.conn_to(pop_rate,1);
+	};
+	var opt3=function(){
+		nat_pop_rate.break_conn_to(pop_rate);
+		nat_pop_rate2.break_conn_to(pop_rate);
+		nat_pop_rate3.conn_to(pop_rate,1);
+	};
+	var options={"grow":opt1,"neutral":opt2,"shrink":opt3};
+
+	var rate_choice = new flow.Choice("Rate Choice","grow",options);
+
+
+	pop.conn_to(pop_delta,1);
+	pop_rate.conn_to(pop_delta,1);
+	pop_delta.conn_to(pop,1);
+	nat_pop_rate.conn_to(pop_rate,1);
+
+	return [rate_choice,nat_pop_rate,pop_rate,pop_delta,pop];
+}
+function choice_test_full(){
+	var all_points=choice_test();
+	for (var j = 0;j < 100;j += 1){
+		if (j==30){
+			all_points[0].value="neutral";
+		}
+		if (j==70){
+			all_points[0].value="shrink";
+		}
+		for(var i = 0;i < all_points.length;i += 1){
+			var point = all_points[i];
+			point.full_calc();
+		}
+		for(var k=0;k<all_points.length;k+=1){
+			var point=all_points[k];
+			point.display();
+		}
+		console.log("----------- "+(j+1));
+	}
+}
+
+
+//disconnect_test_full();
 //var all_points=hunger_test();
 //var all_points=thirst_test();
-all_points=shelter_test();
-for (var j = 0;j < 100;j += 1){
-	for(var i = 0;i < all_points.length;i += 1){
-		var point = all_points[i];
-		point.full_calc();
-	}
-	for(var k=0;k<all_points.length;k+=1){
-		var point=all_points[k];
-		point.display();
-	}
-	console.log("----------- "+(j+1));
-}
+//all_points=shelter_test();
+choice_test_full();
+
+
+// for (var j = 0;j < 100;j += 1){
+// 	for(var i = 0;i < all_points.length;i += 1){
+// 		var point = all_points[i];
+// 		point.full_calc();
+// 	}
+// 	for(var k=0;k<all_points.length;k+=1){
+// 		var point=all_points[k];
+// 		point.display();
+// 	}
+// 	console.log("----------- "+(j+1));
+// }
 
 });

@@ -7,12 +7,18 @@ comb.add = function(point,dont_keep_old){
 	for(var i = 0; i < conns.length;i += 1){
 		var tup = conns[i];
 		var o_point = tup[0];
-		var weight = tup[1];
-		var coeff=o_point.value*weight
-		if (point.debug){
-			console.log("[Add "+point.name+"] Received "+coeff+" from "+o_point.name);
+		if (o_point.disabled==false){
+			var weight = tup[1];
+			var coeff=o_point.value*weight
+			if (point.debug){
+				console.log("[Add "+point.name+"] Received "+coeff+" from "+o_point.name);
+			}
+			delta += coeff;
+		}else{
+			if (point.debug){
+				console.log("[Add "+point.name+"] touched "+o_point.name+" but it is disabled");
+			}
 		}
-		delta += coeff;
 	}
 	if(dont_keep_old){
 		if (point.debug){
@@ -49,8 +55,18 @@ comb.mult = function(point){
 	for(var i = 0; i < conns.length;i += 1){
 		var tup = conns[i];
 		var o_point = tup[0];
-		var weight = tup[1];
-		delta *= o_point.value*weight;
+		if (o_point.disabled==false){
+			var weight = tup[1];
+			var coeff=o_point.value*weight
+			if (point.debug){
+				console.log("[Add "+point.name+"] Received "+coeff+" from "+o_point.name);
+			}
+			delta *=coeff ;
+		}else{
+			if (point.debug){
+				console.log("[Add "+point.name+"] touched "+o_point.name+" but it is disabled");
+			}
+		}
 	}
 	return delta;
 };
@@ -77,7 +93,9 @@ comb.dup=function(point){
 	if (conns.length>1){
 		console.log("[Dup ERROR "+point.name+"] Duplicate point received multiple inputs!");
 	}else{
-		return conns[0][0].value*conns[0][1];
+		if (conns[0][0].disabled==false){
+			return conns[0][0].value*conns[0][1];
+		}
 	}
 };
 
@@ -94,5 +112,13 @@ comb.high_clamp=function(point){
 			point.target.value=point.value+point.fudge;
 	}
 };
+
+comb.choose=function(point){
+	if (point.prev_value!=point.value){
+		var func=point.options[point.value];
+		func();
+		point.prev_value=point.value;
+	}
+}
 
 define(comb);

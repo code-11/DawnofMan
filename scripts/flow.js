@@ -7,13 +7,30 @@ flow.Point = function(name,init_val){
 	//All connections to this point
 	this.conns = [];
 	this.debug=false;
+	this.disabled=false;
 };
 flow.Point.prototype.conn_to= function(o_point,weight){
+		for (var i=0; i<o_point.conns.length;i+=1){
+			el=o_point.conns[i][0];
+			if (el.name==this.name){
+				console.log("[Point "+this.name+"] A connection already exists with "+o_point.name);
+				return;
+			} 
+		}
 		o_point.conns.push([this,weight]);
 };
+flow.Point.prototype.break_conn_to=function(o_point){
+		for (var i=0; i<o_point.conns.length;i+=1){
+			el=o_point.conns[i][0];
+			if (el.name==this.name){
+				o_point.conns.splice(i,1);
+			} 
+		}
+};
 flow.Point.prototype.display_conns = function(){
-	console.log(this.name + " contains:");
-	console.log(this.conns);
+	for (var i=0; i<this.conns.length;i+=1){
+		console.log("[Point "+this.name+"] connects with "+this.conns[i][0].name+" with weight "+this.conns[i][1]);
+	}
 };
 flow.Point.prototype.display = function(ticks){
 	if(ticks!=undefined){
@@ -35,9 +52,11 @@ flow.Point.prototype.calc=function(){
 		this.value=comb.add(this,false);
 };
 flow.Point.prototype.full_calc=function(){
+	if(this.disabled==false){
 		this.pre_calc();
 		this.calc();
 		this.post_calc();
+	}
 };
 
 //Rates don't accumulate, they are set every step.
@@ -48,6 +67,7 @@ flow.Rate = function(name,init_val){
 	//All connections to this point
 	this.conns = [];
 	this.debug=false;
+	this.disabled=false;
 };
 //Extend superclass
 flow.Rate.prototype=Object.create(flow.Point.prototype);
@@ -62,6 +82,7 @@ flow.Mult =function(name,init_val){
 	//All connections to this point
 	this.conns = [];
 	this.debug=false;
+	this.disabled=false;
 };
 //Extend superclass
 flow.Mult.prototype=Object.create(flow.Point.prototype);
@@ -75,6 +96,7 @@ flow.Source =function(name,init_val){
 	//All connections to this point
 	this.conns = [];
 	this.debug=false;
+	this.disabled=false;
 };
 //Extend superclass
 flow.Source.prototype=Object.create(flow.Point.prototype);
@@ -100,11 +122,25 @@ flow.Dup=function(name){
 	this.value=0;
 	this.conns=[];
 	this.debug=false;
+	this.disabled=false;
 }
 flow.Dup.prototype=Object.create(flow.Point.prototype);
 flow.Dup.prototype.calc=function(){
 	this.value=comb.dup(this);
 };
+
+flow.Choice=function(name,initial_val,options){
+	this.name=name;
+	this.value=initial_val;
+	this.prev_value=this.value;
+	this.debug=false;
+	this.options=options;
+}
+flow.Choice.prototype.full_calc=function(){
+	comb.choose(this);
+};
+flow.Choice.prototype.display=function(){};
+
 
 flow.LowClamp=function(point,value,fudge){
 	this.value=value;
