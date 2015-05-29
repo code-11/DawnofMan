@@ -184,24 +184,24 @@ function choice_test_full(){
 	}
 }
 
-
 //disconnect_test_full();
 //var all_points=hunger_test();
 //var all_points=thirst_test();
-//all_points=shelter_test();
-choice_test_full();
+all_points=shelter_test();
+//choice_test_full();
+j=0;
 
-
-// for (var j = 0;j < 100;j += 1){
-// 	for(var i = 0;i < all_points.length;i += 1){
-// 		var point = all_points[i];
-// 		point.full_calc();
-// 	}
-// 	for(var k=0;k<all_points.length;k+=1){
-// 		var point=all_points[k];
-// 		point.display();
-// 	}
-// 	console.log("----------- "+(j+1));
-// }
-
+function next(){
+	for(var i = 0;i < all_points.length;i += 1){
+		var point = all_points[i];
+		point.full_calc();
+	}
+	for(var k=0;k<all_points.length;k+=1){
+		var point=all_points[k];
+		point.display();
+	}
+	console.log("----------- "+(j+1));
+	j+=1;
+}
+window.next=next;
 });
