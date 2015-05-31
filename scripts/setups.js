@@ -183,12 +183,14 @@ setups.main_sim=function(){
 	var exposure    = new flow.Rate("Exposure"     ,0);
 	var exposure_clamp=new flow.LowClamp(exposure,0,0);
 	var water       = new flow.Rate("Water"        ,0);
-	var water_inflow= new flow.Source("Water Inflow",10);
+	var water_inflow= new flow.Source("Water Inflow",100);
 	var water_clamp = new flow.LowClamp(water,0,0);
 	var thirst      = new flow.Dup("Thirst"        ,0);
 	var thirst_clamp= new flow.LowClamp(thirst,0,0);
-	var hunger      = new flow.Sub("Hunger"       ,0);
+	var hunger      = new flow.Dup("Hunger"       ,0);
 	var food        = new flow.Point("Food Unit"   ,10000);
+	var food_clamp	= new flow.LowClamp(food,0,0);
+	var hunger_clamp= new flow.LowClamp(hunger,0,0);
 
 	//BIRTHS
 	pop.conn_to(pop_delta,1);
@@ -196,9 +198,32 @@ setups.main_sim=function(){
 	pop_delta.conn_to(pop,1);
 	nat_pop_rate.conn_to(pop_rate,1);
 
+	//FOOD
+	pop.conn_to(food,-1);
+	food.conn_to(hunger,-1);
+	hunger.conn_to(pop,-.1);
 
+	//WATER
+	pop.conn_to(water,-1);
+	water_inflow.conn_to(water,1);
+	water.conn_to(thirst,-1);
+	thirst.conn_to(pop,-.1);
 
+	//SHELTER
+	pop.conn_to(eff,1);
+	nat_eff.conn_to(eff,1);
+	eff.conn_to(work,1);
+	work.conn_to(shelter,.01);
+	shelter.conn_to(exposure,-1);
+	pop.conn_to(exposure,1);
+	exposure.conn_to(pop,-.03);
 
+	var pop_stuff=[nat_pop_rate,pop_rate,pop_delta,pop,pop_clamp];
+	var water_stuff=[water_inflow,water,thirst,water_clamp,thirst_clamp];
+	var food_stuff=[food,hunger,food_clamp,hunger_clamp];
+	var shelter_stuff=[nat_eff,eff,work,shelter,exposure,exposure_clamp];
+
+	return pop_stuff.concat(water_stuff).concat(food_stuff).concat(shelter_stuff);
 }
 
 return setups;

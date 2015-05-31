@@ -26,7 +26,7 @@ actions.update_all=function(all_points,all_ids){
 		var point=flow.select(all_points,id_to_disp[id]);
 		if (point!=undefined){
 			$(document).ready(function(){
-				$(id).text(point.value);
+				$(id).text(point.value.toFixed(2));
 			});
 		}else{
 			console.log(id+" was undefined");
