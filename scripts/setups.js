@@ -1,36 +1,26 @@
 define(["./flow"], function(flow) {
 var setups = setups || {};
 setups.hunger_test=function (){
-	var shelter     = new flow.Point("Shelter Unit",0);
-	var pop_health  = new flow.Rate("Pop Health"   ,0);
 	var pop_delta   = new flow.Mult("Pop Delta"    ,1);
-	var nat_pop_rate= new flow.Source("Nat Pop Rate",.0003);//realistic is .00003
+	var nat_pop_rate= new flow.Source("Nat Pop Rate",.03);//realistic is .00003
 	var pop_rate    = new flow.Rate("Pop Rate"     ,0);
 	var pop         = new flow.Point("Pop Unit"    ,10);
-	var work        = new flow.Rate("Work Unit"    ,0);
+	var pop_clamp   = new flow.LowClamp(pop,1,-1);
 	var food        = new flow.Point("Food Unit"   ,10000);
-	var gather_type = new flow.Point("Gather Type" ,0);
-	var food_rate   = new flow.Rate("Food Rate"    ,0);
-	var exposure    = new flow.Sub("Exposure"     ,0);
-	var hunger      = new flow.Sub("Hunger"       ,0);
-
-	flow.add_low_shift(food,0,0);
-	flow.add_low_shift(pop,1,0);
-	flow.add_low_shift(hunger,0,0);
+	var hunger      = new flow.Dup("Hunger"       ,0);
+	var food_clamp	= new flow.LowClamp(food,0,0);
+	var hunger_clamp= new flow.LowClamp(hunger,0,0);
 
 	pop.conn_to(pop_delta,1);
-	pop.conn_to(food,-1);
 	pop_rate.conn_to(pop_delta,1);
 	pop_delta.conn_to(pop,1);
-
 	nat_pop_rate.conn_to(pop_rate,1);
 
+	pop.conn_to(food,-1);
 	//hunger subtracts population from food 
-	pop.conn_to(hunger,1);
-	food.conn_to(hunger,1);
-
+	food.conn_to(hunger,-1);
 	hunger.conn_to(pop,-.1);
-	return [nat_pop_rate,pop_rate,pop_delta,pop,food,hunger];
+	return [nat_pop_rate,pop_rate,pop_delta,pop,pop_clamp,food,hunger,food_clamp,hunger_clamp];
 }
 
 setups.thirst_test=function(){
@@ -179,6 +169,36 @@ setups.choice_test_full=function(){
 		}
 		console.log("----------- "+(j+1));
 	}
+}
+setups.main_sim=function(){
+	var pop_delta   = new flow.Mult("Pop Delta"    ,1);
+	var nat_pop_rate= new flow.Source("Nat Pop Rate",.003);//realistic is .00003
+	var pop_rate    = new flow.Rate("Pop Rate"     ,0);
+	var pop         = new flow.Point("Pop Unit"    ,90);
+	var pop_clamp   = new flow.LowClamp(pop,1,-1);
+	var eff         = new flow.Mult("Efficiency"   ,1);
+	var nat_eff     = new flow.Source("Nat Efficiency",10);
+	var work        = new flow.Rate("Work"         ,0);
+	var shelter     = new flow.Point("Shelter Unit"     ,0);
+	var exposure    = new flow.Rate("Exposure"     ,0);
+	var exposure_clamp=new flow.LowClamp(exposure,0,0);
+	var water       = new flow.Rate("Water"        ,0);
+	var water_inflow= new flow.Source("Water Inflow",10);
+	var water_clamp = new flow.LowClamp(water,0,0);
+	var thirst      = new flow.Dup("Thirst"        ,0);
+	var thirst_clamp= new flow.LowClamp(thirst,0,0);
+	var hunger      = new flow.Sub("Hunger"       ,0);
+	var food        = new flow.Point("Food Unit"   ,10000);
+
+	//BIRTHS
+	pop.conn_to(pop_delta,1);
+	pop_rate.conn_to(pop_delta,1);
+	pop_delta.conn_to(pop,1);
+	nat_pop_rate.conn_to(pop_rate,1);
+
+
+
+
 }
 
 return setups;

@@ -26,8 +26,6 @@ actions.update_all=function(all_points,all_ids){
 		var point=flow.select(all_points,id_to_disp[id]);
 		if (point!=undefined){
 			$(document).ready(function(){
-				console.log("set "+id+" to "+point.value);
-				//$(id).text=point.value;
 				$(id).text(point.value);
 			});
 		}else{
