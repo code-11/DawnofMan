@@ -170,5 +170,15 @@ flow.debug=function(point){
 	point.debug=true;
 }
 
+flow.select=function(point_list,name){
+	for (var i=0; i<point_list.length;i+=1){
+		el=point_list[i];
+		if (el.name==name){
+			return el;
+		} 
+	}
+}
+
+
 
 return flow});

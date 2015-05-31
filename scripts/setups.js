@@ -69,7 +69,7 @@ setups.shelter_test=function(){
 	var eff         = new flow.Mult("Efficiency"   ,1);
 	var nat_eff     = new flow.Source("Nat Efficiency",10);
 	var work        = new flow.Rate("Work"         ,0);
-	var shelter     = new flow.Point("Shelter"     ,0);
+	var shelter     = new flow.Point("Shelter Unit"     ,0);
 	var exposure    = new flow.Rate("Exposure"     ,0);
 	var exposure_clamp=new flow.LowClamp(exposure,0,0);
 
