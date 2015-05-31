@@ -1,4 +1,4 @@
-requirejs(["setups"], function(setups) {
+requirejs(["setups","jquery"], function(setups,$) {
     //This function is called when scripts/helper/util.js is loaded.
     //If util.js calls define(), then this function is not fired until
     //util's dependencies have loaded, and the util argument will hold
@@ -24,5 +24,11 @@ function next(){
 	console.log("----------- "+(j+1));
 	j+=1;
 }
-window.next=next;
+
+$(document).ready(function(){
+    $("#next").click(function(){
+        next();
+    });
+});
+
 });
