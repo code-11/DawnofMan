@@ -170,6 +170,34 @@ setups.choice_test_full=function(){
 		console.log("----------- "+(j+1));
 	}
 }
+setups.decision_test=function(){
+	var thing=new flow.Source("Thing",100);
+
+	var hunt_perc= new flow.Source("Hunting Percent" ,0);
+	var farm_perc= new flow.Source("Farming Percent" ,0);
+
+	var hunt_path= new flow.Path(hunt_perc,"hunt_path","decisions");
+	var farm_path= new flow.Path(farm_perc,"farm_path","decisions");
+
+	var hunt= new flow.Mult("Hunting" ,0);
+	var farm= new flow.Mult("Farming" ,0);
+
+	var type_of_food= new flow.Decision([hunt_path,farm_path],"food_type");
+
+	thing.conn_to(hunt,1);
+	hunt_perc.conn_to(hunt,1);
+
+	thing.conn_to(farm,1);
+	farm_perc.conn_to(farm,1);
+
+	return [hunt_path,farm_path,type_of_food,thing,hunt,farm];
+
+	// var fish_path= new flow.Path("fish_path","Fishing","decisions");
+	// var scav_path= new flow.Path("scav_path","Scavenging","decisions");
+	// var hus_path= new flow.path("hus_path","Husbandry","decisions");
+
+
+}
 setups.main_sim=function(){
 	var pop_delta   = new flow.Mult("Pop Delta"    ,1);
 	var nat_pop_rate= new flow.Source("Nat Pop Rate",.003);//realistic is .00003

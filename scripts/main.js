@@ -9,7 +9,8 @@ requirejs(["setups","jquery","actions"], function(setups,$,actions) {
 //var all_points=setups.hunger_test();
 //var all_points=thirst_test();
 //var all_points=setups.shelter_test();
-var all_points=setups.main_sim();
+//var all_points=setups.main_sim();
+var all_points=setups.decision_test();
 var all_ids=["#house","#food","#water","#pop"];
 
 //choice_test_full();

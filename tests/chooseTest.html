@@ -14,10 +14,13 @@
 		$(document).ready(function() {
 		$("#submit").click(function(){
 			var eval_list=["#hunt","#farm","#fish","#scav","#hus"];
+			var val_list=["#hunt_val","#farm_val","#fish_val","#scav_val","#hus_val"];
 			var running_sum=0;
 			for(var i=0;i<eval_list.length;i+=1){
-				
-				running_sum+=$(eval_list[i]).val();
+				running_sum+=parseInt($(eval_list[i]).val());
+			}
+			for(var i=0;i<val_list.length;i+=1){
+				$(val_list[i]).text(parseInt($(eval_list[i]).val())/running_sum);
 			}
 			console.log(running_sum);
 			});
