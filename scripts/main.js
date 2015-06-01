@@ -17,8 +17,20 @@ var all_ids=["#house","#food","#water","#pop"];
 j=0;
 
 $(document).ready(function(){
+	for(var i=0;i<all_points.length;i+=1){
+		var init_func=all_points[i].init;
+		if (init_func){
+			all_points[i].init();
+		}
+	}
     $("#next").click(function(){
         actions.next(all_points,all_ids);
+    });
+    $("#food_source_link").click(function(){
+    	actions.switch_to("mainbar","food_source");
+    });
+    $("#event_delta_link").click(function(){
+    	actions.switch_to("mainbar","event-delta");
     });
 });
 

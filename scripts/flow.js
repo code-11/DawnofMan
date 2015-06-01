@@ -166,20 +166,21 @@ flow.HighClamp.prototype.full_calc=function(){
 	comb.high_clamp(this);
 };
 
-flow.Path=function(point,name){
+flow.Path=function(point,name,html_root){
 	this.point=point;
 	this.disp_name=point.name;
 	this.name=name;
 	this.disp_id=name+"_val";
 	this.inited=false;
 	this.value=0;
+	this.root=document.getElementById(html_root);
 }
 flow.Path.prototype.display=function(){}
 flow.Path.prototype.init_title=function(){
 	var temp_p=document.createElement("P");
 	var temp_txt=document.createTextNode(this.disp_name);
 	temp_p.appendChild(temp_txt);
-	document.body.appendChild(temp_p);
+	this.root.appendChild(temp_p);
 	this.title_html=temp_p;
 }
 flow.Path.prototype.init_disp=function(){
@@ -187,7 +188,7 @@ flow.Path.prototype.init_disp=function(){
 	var temp_txt=document.createTextNode("0");
 	temp_p.appendChild(temp_txt);
 	temp_p.id=this.disp_id;
-	document.body.appendChild(temp_p);
+	this.root.appendChild(temp_p);
 	this.disp_html=temp_p;
 }
 flow.Path.prototype.init_input=function(){
@@ -195,25 +196,25 @@ flow.Path.prototype.init_input=function(){
 	temp_in.id=this.name;
 	temp_in.type="text";
 	temp_in.value=0;
-	document.body.appendChild(temp_in);
+	this.root.appendChild(temp_in);
 	this.input_html=temp_in;
 	//console.log(temp_in);
 }
+flow.Path.prototype.init=function(){
+	this.init_title();
+	this.init_input();
+	this.init_disp();
+}
 flow.Path.prototype.full_calc=function(){
-	if (this.inited==false){
-		this.init_title();
-		this.init_input();
-		this.init_disp();
-		this.inited=true;
-	}
 	this.point.value=this.value//parseFloat(this.disp_html.innerText);
 }
 
-flow.Decision=function(paths,name){
+flow.Decision=function(paths,name,root){
 	this.paths=paths;
 	this.name=name;
 	this.debug=false;
 	this.inited=false;
+	this.root=document.getElementById(root);
 }
 flow.Decision.prototype.the_on_click=function(_this){
 		var running_sum=0;
@@ -228,20 +229,17 @@ flow.Decision.prototype.the_on_click=function(_this){
 			el.value=new_val;
 		}
 }
-flow.Decision.prototype.full_calc=function(){
-	if (this.inited==false){
-		var temp_in=document.createElement("input");
-		temp_in.value="Normalize";
-		temp_in.type="Button";
-		temp_in.id=this.name;
-		var _this=this;
-		temp_in.onclick=function(){_this.the_on_click(_this)};
-		document.body.appendChild(temp_in);
-		this.inited=true;
-	}
-
+flow.Decision.prototype.init=function(){
+	var temp_in=document.createElement("input");
+	temp_in.value="Normalize";
+	temp_in.type="Button";
+	temp_in.id=this.name;
+	var _this=this;
+	temp_in.onclick=function(){_this.the_on_click(_this)};
+	this.root.appendChild(temp_in);
 }
 flow.Decision.prototype.display=function(){}
+flow.Decision.prototype.full_calc=function(){}
 
 flow.debug=function(point){
 	point.debug=true;

@@ -1,5 +1,11 @@
 define(["./flow","jquery"], function(flow,$) {
 var actions = actions || {};
+
+actions.switch_to=function(main,o_id){
+	$("#"+main).children().css("display","none");
+	$("#"+o_id).css("display","initial");
+}
+
 actions.next=function(all_points,all_ids){
 	for(var i = 0;i < all_points.length;i += 1){
 		var point = all_points[i];
@@ -32,7 +38,6 @@ actions.update_all=function(all_points,all_ids){
 			console.log(id+" was undefined");
 		}
 	}
-	
 }
 return actions;
 });

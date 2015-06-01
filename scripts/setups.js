@@ -176,13 +176,13 @@ setups.decision_test=function(){
 	var hunt_perc= new flow.Source("Hunting Percent" ,0);
 	var farm_perc= new flow.Source("Farming Percent" ,0);
 
-	var hunt_path= new flow.Path(hunt_perc,"hunt_path","decisions");
-	var farm_path= new flow.Path(farm_perc,"farm_path","decisions");
+	var hunt_path= new flow.Path(hunt_perc,"hunt_path","food_source");
+	var farm_path= new flow.Path(farm_perc,"farm_path","food_source");
 
 	var hunt= new flow.Mult("Hunting" ,0);
 	var farm= new flow.Mult("Farming" ,0);
 
-	var type_of_food= new flow.Decision([hunt_path,farm_path],"food_type");
+	var type_of_food= new flow.Decision([hunt_path,farm_path],"food_type","food_source");
 
 	thing.conn_to(hunt,1);
 	hunt_perc.conn_to(hunt,1);

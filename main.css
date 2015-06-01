@@ -7,6 +7,20 @@
         flex-direction:row;
         display: flex;
       }
+      #title{
+        margin: 0 5vw 5vh 0;
+        display: inline-block;
+      }
+      #topbar{
+        display:inline-block;
+      }
+      .topbar-el{
+        display:inline-block;
+        margin-left: 5vw
+      }
+      .topbar-img{
+        height:30px;
+      }
       #sidebar{
         margin: 0px;
         border: 0px;
@@ -40,6 +54,9 @@
         background-color: red;
       }
       #mainbar{
+        flex:1;
+      }
+      #event-delta{
         flex: 1;
 /*        width:90%;
 */        height:85vh;
@@ -69,3 +86,4 @@
       #pop{}
       #food{}
       #water{}
+      #food_source_link{}
