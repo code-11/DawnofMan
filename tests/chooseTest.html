@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Choose Test</title>
+		<!-- <link data-main="scripts/main" src="scripts/require.js"></link> -->
+		<script type="text/javascript" src="../scripts/jquery.js"></script>
+		Hunting <input id="hunt" type="text" name="Hunting" value="0"><p id="hunt_val"></p><br>
+		Farming <input id="farm" type="text" name="Farming" value="0"><p id="farm_val"></p><br>
+		Fishing <input id="fish" type="text" name="Fishing" value="0"><p id="fish_val"></p><br>
+		Scavenging <input id="scav" type="text" name="Scavenging" value="0"><p id="scav_val"></p><br>
+		Husbandry <input id="hus" type="text" name="Husbandry" value="10"><p id="hus_val"></p><br>
+		<input id="submit" type="button" value="Submit">
+		<script>
+		$(document).ready(function() {
+		$("#submit").click(function(){
+			var eval_list=["#hunt","#farm","#fish","#scav","#hus"];
+			var running_sum=0;
+			for(var i=0;i<eval_list.length;i+=1){
+				
+				running_sum+=$(eval_list[i]).val();
+			}
+			console.log(running_sum);
+			});
+		});
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
