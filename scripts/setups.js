@@ -204,12 +204,9 @@ setups.main_sim=function(){
 	var pop_rate    = new flow.Rate("Pop Rate"     ,0);
 	var pop         = new flow.Point("Pop Unit"    ,90);
 	var pop_clamp   = new flow.LowClamp(pop,1,-1);
-	var eff         = new flow.Mult("Efficiency"   ,1);
-	var nat_eff     = new flow.Source("Nat Efficiency",10);
+	//var eff         = new flow.Mult("Efficiency"   ,1);
+	//var nat_eff     = new flow.Source("Nat Efficiency",10);
 	var work        = new flow.Rate("Work"         ,0);
-	var shelter     = new flow.Point("Shelter Unit"     ,0);
-	var exposure    = new flow.Rate("Exposure"     ,0);
-	var exposure_clamp=new flow.LowClamp(exposure,0,0);
 	var water       = new flow.Rate("Water"        ,0);
 	var water_inflow= new flow.Source("Water Inflow",100);
 	var water_clamp = new flow.LowClamp(water,0,0);
@@ -219,6 +216,30 @@ setups.main_sim=function(){
 	var food        = new flow.Point("Food Unit"   ,10000);
 	var food_clamp	= new flow.LowClamp(food,0,0);
 	var hunger_clamp= new flow.LowClamp(hunger,0,0);
+
+	var gather_perc    =new flow.Source("Food Gather Percent",0);
+	var construct_perc =new flow.Source("Construction Percent",0);
+	var food_force     =new flow.Mult  ("Food Force",0);
+	var construct_force=new flow.Mult  ("Construct Force",0);
+	var gather_path    =new flow.Path  (gather_perc,"gather_path","work_alot");
+	var construct_path =new flow.Path  (construct_perc,"construct_path","work_alot");
+	var work_alotment  =new flow.Decision([gather_path,construct_path],"work_type","work_alot");
+
+
+	var hunt_perc= new flow.Source("Hunting Percent" ,0);
+	var farm_perc= new flow.Source("Farming Percent" ,0);
+	var idle_perc= new flow.Source("Idle    Percent" ,0);
+	var hunt_path= new flow.Path(hunt_perc,"hunt_path","food_source");
+	var farm_path= new flow.Path(farm_perc,"farm_path","food_source");
+	var idle_path= new flow.Path(idle_perc,"idle_path","food_source");
+	var hunt= new flow.Mult("Hunting" ,0);
+	var farm= new flow.Mult("Farming" ,0);
+	var type_of_food= new flow.Decision([hunt_path,farm_path,idle_path],"food_type","food_source");
+
+	var shelter     = new flow.Point("Shelter Unit"     ,0);
+	var exposure    = new flow.Rate("Exposure"     ,0);
+	var exposure_clamp=new flow.LowClamp(exposure,0,0);
+	
 
 	//BIRTHS
 	pop.conn_to(pop_delta,1);
@@ -237,21 +258,41 @@ setups.main_sim=function(){
 	water.conn_to(thirst,-1);
 	thirst.conn_to(pop,-.1);
 
+	//WORK
+	//pop.conn_to(eff,1);
+	//nat_eff.conn_to(eff,1);
+	//eff.conn_to(work,1);
+	pop.conn_to(work,1);
+	work.conn_to(construct_force,1);
+	work.conn_to(food_force,1);
+	gather_perc.conn_to(food_force,1);
+	construct_perc.conn_to(construct_force,1);
+
 	//SHELTER
-	pop.conn_to(eff,1);
-	nat_eff.conn_to(eff,1);
-	eff.conn_to(work,1);
-	work.conn_to(shelter,.01);
+	construct_force.conn_to(shelter,.1);
 	shelter.conn_to(exposure,-1);
 	pop.conn_to(exposure,1);
 	exposure.conn_to(pop,-.03);
 
+	//FOOD GATHERING
+	food_force.conn_to(hunt,1);
+	hunt_perc.conn_to(hunt,1);
+	food_force.conn_to(farm,1);
+	farm_perc.conn_to(farm,1);
+	hunt.conn_to(food,1.5);
+	farm.conn_to(food,1.1);
+	hunt.conn_to(pop,-.01);
+	farm.conn_to(water,-.1);
+
+
 	var pop_stuff=[nat_pop_rate,pop_rate,pop_delta,pop,pop_clamp];
 	var water_stuff=[water_inflow,water,thirst,water_clamp,thirst_clamp];
 	var food_stuff=[food,hunger,food_clamp,hunger_clamp];
-	var shelter_stuff=[nat_eff,eff,work,shelter,exposure,exposure_clamp];
+	var work_stuff=[work,gather_path,construct_path,work_alotment,food_force,construct_force];//[nat_eff,eff,work]
+	var shelter_stuff=[shelter,exposure,exposure_clamp];
+	var food_source_stuff=[hunt_path,farm_path,idle_path,type_of_food,hunt,farm];
 
-	return pop_stuff.concat(water_stuff).concat(food_stuff).concat(shelter_stuff);
+	return pop_stuff.concat(water_stuff).concat(food_stuff).concat(work_stuff).concat(food_source_stuff).concat(shelter_stuff);
 }
 
 return setups;

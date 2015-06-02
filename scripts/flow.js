@@ -194,8 +194,8 @@ flow.Path.prototype.init_disp=function(){
 flow.Path.prototype.init_input=function(){
 	var temp_in=document.createElement("Input");
 	temp_in.id=this.name;
-	temp_in.type="text";
-	temp_in.value=0;
+	temp_in.type="number";
+	temp_in.value=1;
 	this.root.appendChild(temp_in);
 	this.input_html=temp_in;
 	//console.log(temp_in);
@@ -222,11 +222,20 @@ flow.Decision.prototype.the_on_click=function(_this){
 			el=this.paths[i];
 			running_sum+=parseInt(el.input_html.value);
 		}
-		for(var i=0;i<this.paths.length;i+=1){
-			el=this.paths[i];
-			var new_val=parseInt(el.input_html.value)/running_sum;
-			el.disp_html.innerText=new_val.toFixed(2);
-			el.value=new_val;
+		if (running_sum==0){
+			for(var i=0;i<_this.paths.length;i+=1){
+				el=this.paths[i];
+				var new_val=1.0/_this.paths.length;
+				el.disp_html.innerText=new_val.toFixed(2);
+				el.value=new_val;
+			}
+		}else{
+			for(var i=0;i<this.paths.length;i+=1){
+				el=this.paths[i];
+				var new_val=parseInt(el.input_html.value)/running_sum;
+				el.disp_html.innerText=new_val.toFixed(2);
+				el.value=new_val;
+			}
 		}
 }
 flow.Decision.prototype.init=function(){
