@@ -171,7 +171,7 @@ setups.choice_test_full=function(){
 	}
 }
 setups.decision_test=function(){
-	var thing=new flow.Source("Thing",100);
+	var thing=new flow.Source("Work",100);
 
 	var hunt_perc= new flow.Source("Hunting Percent" ,0);
 	var farm_perc= new flow.Source("Farming Percent" ,0);

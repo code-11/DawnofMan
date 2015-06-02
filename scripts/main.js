@@ -32,6 +32,7 @@ $(document).ready(function(){
     $("#event_delta_link").click(function(){
     	actions.switch_to("mainbar","event-delta");
     });
+    $("#food_source").css("display","none");
 });
 
 });
