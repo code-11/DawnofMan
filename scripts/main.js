@@ -35,8 +35,12 @@ $(document).ready(function(){
     $("#work_alot_link").click(function(){
     	actions.switch_to("mainbar","work_alot");
     });
+    $("#constr_alot_link").click(function(){
+    	actions.switch_to("mainbar","constr_alot");
+    });
     $("#food_source").css("display","none");
     $("#work_alot").css("display","none");
+    $("#constr_alot").css("display","none");
 });
 
 });

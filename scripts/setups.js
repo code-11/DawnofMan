@@ -236,9 +236,17 @@ setups.main_sim=function(){
 	var farm= new flow.Mult("Farming" ,0);
 	var type_of_food= new flow.Decision([hunt_path,farm_path,idle_path],"food_type","food_source");
 
-	var shelter     = new flow.Point("Shelter Unit"     ,0);
-	var exposure    = new flow.Rate("Exposure"     ,0);
-	var exposure_clamp=new flow.LowClamp(exposure,0,0);
+	var shelter        = new flow.Point("Shelter Unit"     ,0);
+	var shelter_temp   = new flow.Mult("Shelter Rate"); 
+	var shelter_perc   = new flow.Source("Shelter Percent" ,0);
+	var shelter_path   = new flow.Path(shelter_perc,"shelter_path","constr_alot");
+	var exposure       = new flow.Rate("Exposure"     ,0);
+	var exposure_clamp = new flow.LowClamp(exposure,0,0);
+	var irrigation     = new flow.Point("Irrigation Unit"  ,0);
+	var irrigation_temp= new flow.Mult("Irrigation Rate",0);
+	var irrigation_perc= new flow.Source("Irrigation Percent",0);
+	var irrigation_path= new flow.Path(irrigation_perc,"irrigation_path","constr_alot");
+	var constr_alotment= new flow.Decision([shelter_path,irrigation_path],"constr_type","constr_alot");
 	
 
 	//BIRTHS
@@ -268,8 +276,15 @@ setups.main_sim=function(){
 	gather_perc.conn_to(food_force,1);
 	construct_perc.conn_to(construct_force,1);
 
-	//SHELTER
-	construct_force.conn_to(shelter,.1);
+	//CONSTRUCTION
+	construct_force.conn_to(shelter_temp,1);
+	shelter_perc.conn_to(shelter_temp,1);
+	shelter_temp.conn_to(shelter,.1);
+	construct_force.conn_to(irrigation_temp,1);
+	irrigation_perc.conn_to(irrigation_temp,1);
+	irrigation_temp.conn_to(irrigation,.1);
+
+	//EXPOSURE
 	shelter.conn_to(exposure,-1);
 	pop.conn_to(exposure,1);
 	exposure.conn_to(pop,-.03);
@@ -289,10 +304,11 @@ setups.main_sim=function(){
 	var water_stuff=[water_inflow,water,thirst,water_clamp,thirst_clamp];
 	var food_stuff=[food,hunger,food_clamp,hunger_clamp];
 	var work_stuff=[work,gather_path,construct_path,work_alotment,food_force,construct_force];//[nat_eff,eff,work]
-	var shelter_stuff=[shelter,exposure,exposure_clamp];
+	var constr_stuff=[irrigation_path,shelter_path,constr_alotment,irrigation_temp,shelter_temp,irrigation,shelter]
+	var exposure_stuff=[exposure,exposure_clamp];
 	var food_source_stuff=[hunt_path,farm_path,idle_path,type_of_food,hunt,farm];
 
-	return pop_stuff.concat(water_stuff).concat(food_stuff).concat(work_stuff).concat(food_source_stuff).concat(shelter_stuff);
+	return pop_stuff.concat(water_stuff).concat(food_stuff).concat(work_stuff).concat(constr_stuff).concat(exposure_stuff).concat(food_source_stuff);
 }
 
 return setups;
