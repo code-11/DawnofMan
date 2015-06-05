@@ -98,6 +98,24 @@ comb.dup=function(point){
 		}
 	}
 };
+comb.least= function(point){
+	var conns=point.conns;
+	if(conns.length==0){
+		console.log("[Least ERROR "+point.name+"] Least point received no inputs!");
+	}else{
+		var minimum=conns[0][0].value*conns[0][1];
+		for(var i=0; i<conns.length;i+=1){
+			var point=conns[i][0];
+			var weight=conns[i][1];
+			var temp_val=point.value*weight;
+			if (temp_val<minimum){
+				minimum=temp_val;
+			}
+		}
+		return minimum;
+	}
+
+}
 
 comb.low_clamp=function(point){
 	var value=point.value;

@@ -128,6 +128,17 @@ flow.Dup.prototype=Object.create(flow.Point.prototype);
 flow.Dup.prototype.calc=function(){
 	this.value=comb.dup(this);
 };
+flow.Least=function(name){
+	this.name=name;
+	this.value=0;
+	this.conns=[];
+	this.debug=false;
+	this.disabled=false;
+}
+flow.Least.prototype=Object.create(flow.Point.prototype);
+flow.Least.prototype.calc=function(){
+	this.value=comb.least(this);
+};
 
 flow.Choice=function(name,initial_val,options){
 	this.name=name;

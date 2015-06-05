@@ -219,11 +219,14 @@ setups.main_sim=function(){
 
 	var gather_perc    =new flow.Source("Food Gather Percent",0);
 	var construct_perc =new flow.Source("Construction Percent",0);
+	var mining_perc    =new flow.Source("Mining Percent",0);
 	var food_force     =new flow.Mult  ("Food Force",0);
 	var construct_force=new flow.Mult  ("Construct Force",0);
+	var mining_force   =new flow.Mult  ("Mining Force",   0);
 	var gather_path    =new flow.Path  (gather_perc,"gather_path","work_alot");
 	var construct_path =new flow.Path  (construct_perc,"construct_path","work_alot");
-	var work_alotment  =new flow.Decision([gather_path,construct_path],"work_type","work_alot");
+	var mining_path    =new flow.Path  (mining_perc,"mining_path","work_alot");
+	var work_alotment  =new flow.Decision([gather_path,construct_path,mining_path],"work_type","work_alot");
 
 
 	var hunt_perc= new flow.Source("Hunting Percent" ,0);
@@ -246,8 +249,14 @@ setups.main_sim=function(){
 	var irrigation_temp= new flow.Mult("Irrigation Rate",0);
 	var irrigation_perc= new flow.Source("Irrigation Percent",0);
 	var irrigation_path= new flow.Path(irrigation_perc,"irrigation_path","constr_alot");
-	var constr_alotment= new flow.Decision([shelter_path,irrigation_path],"constr_type","constr_alot");
+	var mine           = new flow.Point("Mine Unit",0);
+	var mine_temp      = new flow.Mult("Mine Building Rate");
+	var mine_perc      = new flow.Source("Mine Building Percent",0);
+	var mine_path      = new flow.Path(mine_perc,"mine_build_path","constr_alot");
+	var constr_alotment= new flow.Decision([shelter_path,irrigation_path, mine_path],"constr_type","constr_alot");
 	
+	var mine_limit     = new flow.Least("Mine Limit");
+	var flint          = new flow.Point("Flint",0);
 
 	//BIRTHS
 	pop.conn_to(pop_delta,1);
@@ -273,8 +282,15 @@ setups.main_sim=function(){
 	pop.conn_to(work,1);
 	work.conn_to(construct_force,1);
 	work.conn_to(food_force,1);
+	work.conn_to(mining_force,1);
 	gather_perc.conn_to(food_force,1);
 	construct_perc.conn_to(construct_force,1);
+	mining_perc.conn_to(mining_force,1);
+
+	//MINING
+	mining_force.conn_to(mine_limit,1);
+	mine.conn_to(mine_limit,10);
+	mine_limit.conn_to(flint,1);
 
 	//CONSTRUCTION
 	construct_force.conn_to(shelter_temp,1);
@@ -283,6 +299,9 @@ setups.main_sim=function(){
 	construct_force.conn_to(irrigation_temp,1);
 	irrigation_perc.conn_to(irrigation_temp,1);
 	irrigation_temp.conn_to(irrigation,.1);
+	construct_force.conn_to(mine_temp,1);
+	mine_perc.conn_to(mine_temp,1);
+	mine_temp.conn_to(mine,.05);
 
 	//EXPOSURE
 	shelter.conn_to(exposure,-1);
@@ -303,12 +322,13 @@ setups.main_sim=function(){
 	var pop_stuff=[nat_pop_rate,pop_rate,pop_delta,pop,pop_clamp];
 	var water_stuff=[water_inflow,water,thirst,water_clamp,thirst_clamp];
 	var food_stuff=[food,hunger,food_clamp,hunger_clamp];
-	var work_stuff=[work,gather_path,construct_path,work_alotment,food_force,construct_force];//[nat_eff,eff,work]
-	var constr_stuff=[irrigation_path,shelter_path,constr_alotment,irrigation_temp,shelter_temp,irrigation,shelter]
+	var work_stuff=[work,gather_path,construct_path,mining_path,work_alotment,food_force,construct_force,mining_force];//[nat_eff,eff,work]
+	var constr_stuff=[irrigation_path,shelter_path,mine_path,constr_alotment,irrigation_temp,shelter_temp,mine_temp,irrigation,shelter,mine]
+	var mining_stuff=[mine_limit,flint];
 	var exposure_stuff=[exposure,exposure_clamp];
 	var food_source_stuff=[hunt_path,farm_path,idle_path,type_of_food,hunt,farm];
 
-	return pop_stuff.concat(water_stuff).concat(food_stuff).concat(work_stuff).concat(constr_stuff).concat(exposure_stuff).concat(food_source_stuff);
+	return pop_stuff.concat(water_stuff).concat(food_stuff).concat(work_stuff).concat(mining_stuff).concat(constr_stuff).concat(exposure_stuff).concat(food_source_stuff);
 }
 
 return setups;
