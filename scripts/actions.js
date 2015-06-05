@@ -6,7 +6,12 @@ actions.switch_to=function(main,o_id){
 	$("#"+o_id).css("display","initial");
 }
 
+actions.reset_events=function(){
+	$("#events").empty();
+}
+
 actions.next=function(all_points,all_ids){
+	actions.reset_events();
 	for(var i = 0;i < all_points.length;i += 1){
 		var point = all_points[i];
 		point.full_calc();
@@ -25,7 +30,10 @@ actions.update_all=function(all_points,all_ids){
 			"#house":"Shelter Unit",
 			"#pop":"Pop Unit",
 			"#food":"Food Unit",
-			"#water":"Water"
+			"#water":"Water",
+			"#flint":"Flint",
+			"#mine":"Mine Unit"
+
 	};
 	for (var l=0;l<all_ids.length;l+=1){
 		var id=all_ids[l];

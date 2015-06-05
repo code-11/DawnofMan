@@ -203,6 +203,7 @@ setups.main_sim=function(){
 	var nat_pop_rate= new flow.Source("Nat Pop Rate",.003);//realistic is .00003
 	var pop_rate    = new flow.Rate("Pop Rate"     ,0);
 	var pop         = new flow.Point("Pop Unit"    ,90);
+	var pop_alert   = new flow.LowAlert(pop,"Your people are broken. They are no more.");
 	var pop_clamp   = new flow.LowClamp(pop,1,-1);
 	//var eff         = new flow.Mult("Efficiency"   ,1);
 	//var nat_eff     = new flow.Source("Nat Efficiency",10);
@@ -211,8 +212,10 @@ setups.main_sim=function(){
 	var water_inflow= new flow.Source("Water Inflow",100);
 	var water_clamp = new flow.LowClamp(water,0,0);
 	var thirst      = new flow.Dup("Thirst"        ,0);
+	var thirst_alert = new flow.PresenceAlert(thirst,"The people cry for water! The weak and old collapse dead in the streets!");
 	var thirst_clamp= new flow.LowClamp(thirst,0,0);
 	var hunger      = new flow.Dup("Hunger"       ,0);
+	var hunger_alert = new flow.PresenceAlert(hunger,"There is no more food! The weak and old collapse dead in the streets!");
 	var food        = new flow.Point("Food Unit"   ,10000);
 	var food_clamp	= new flow.LowClamp(food,0,0);
 	var hunger_clamp= new flow.LowClamp(hunger,0,0);
@@ -244,6 +247,7 @@ setups.main_sim=function(){
 	var shelter_perc   = new flow.Source("Shelter Percent" ,0);
 	var shelter_path   = new flow.Path(shelter_perc,"shelter_path","constr_alot");
 	var exposure       = new flow.Rate("Exposure"     ,0);
+	var exposure_alert = new flow.PresenceAlert(exposure,"The homeless are dying of exposure!");
 	var exposure_clamp = new flow.LowClamp(exposure,0,0);
 	var irrigation     = new flow.Point("Irrigation Unit"  ,0);
 	var irrigation_temp= new flow.Mult("Irrigation Rate",0);
@@ -255,6 +259,7 @@ setups.main_sim=function(){
 	var mine_path      = new flow.Path(mine_perc,"mine_build_path","constr_alot");
 	var constr_alotment= new flow.Decision([shelter_path,irrigation_path, mine_path],"constr_type","constr_alot");
 	
+	var mine_inef_alert= new flow.GreaterAlert(mining_force,mine,10,"There is not enough space in the mines.");
 	var mine_limit     = new flow.Least("Mine Limit");
 	var flint          = new flow.Point("Flint",0);
 
@@ -319,13 +324,13 @@ setups.main_sim=function(){
 	farm.conn_to(water,-.1);
 
 
-	var pop_stuff=[nat_pop_rate,pop_rate,pop_delta,pop,pop_clamp];
-	var water_stuff=[water_inflow,water,thirst,water_clamp,thirst_clamp];
-	var food_stuff=[food,hunger,food_clamp,hunger_clamp];
+	var pop_stuff=[nat_pop_rate,pop_rate,pop_delta,pop,pop_alert,pop_clamp];
+	var water_stuff=[water_inflow,water,thirst,thirst_alert,water_clamp,thirst_clamp];
+	var food_stuff=[food,hunger,hunger_alert,food_clamp,hunger_clamp];
 	var work_stuff=[work,gather_path,construct_path,mining_path,work_alotment,food_force,construct_force,mining_force];//[nat_eff,eff,work]
 	var constr_stuff=[irrigation_path,shelter_path,mine_path,constr_alotment,irrigation_temp,shelter_temp,mine_temp,irrigation,shelter,mine]
-	var mining_stuff=[mine_limit,flint];
-	var exposure_stuff=[exposure,exposure_clamp];
+	var mining_stuff=[mine_limit,mine_inef_alert,flint];
+	var exposure_stuff=[exposure,exposure_alert,exposure_clamp];
 	var food_source_stuff=[hunt_path,farm_path,idle_path,type_of_food,hunt,farm];
 
 	return pop_stuff.concat(water_stuff).concat(food_stuff).concat(work_stuff).concat(mining_stuff).concat(constr_stuff).concat(exposure_stuff).concat(food_source_stuff);

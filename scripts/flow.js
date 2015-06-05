@@ -1,4 +1,4 @@
-define(["./comb"], function (comb){
+define(["./comb","jquery"], function (comb,$){
 var flow = flow || {};
 
 flow.Point = function(name,init_val){
@@ -264,6 +264,44 @@ flow.Decision.prototype.full_calc=function(){}
 flow.debug=function(point){
 	point.debug=true;
 }
+
+flow.post_alert=function(text){
+	$("#events").append("<li>"+text+"</li>");
+}
+
+flow.LowAlert=function(point,message){
+	this.point=point;
+	this.msg=message;
+}
+flow.LowAlert.prototype.display=function(){}
+flow.LowAlert.prototype.full_calc=function(){
+	if (this.point.value<=0){
+		flow.post_alert(this.msg);
+	}
+}
+flow.PresenceAlert=function(point,message){
+	this.point=point;
+	this.msg=message;
+}
+flow.PresenceAlert.prototype.display=function(){}
+flow.PresenceAlert.prototype.full_calc=function(){
+	if (this.point.value>.000001){
+		flow.post_alert(this.msg);
+	}
+}
+flow.GreaterAlert=function(point,o_point,coeff,msg){
+	this.point=point;
+	this.o_point=o_point;
+	this.coeff=coeff;
+	this.msg=msg;
+}
+flow.GreaterAlert.prototype.display=function(){}
+flow.GreaterAlert.prototype.full_calc=function(){
+	if (this.point.value>this.o_point.value*this.coeff){
+		flow.post_alert(this.msg);
+	}
+}
+
 
 flow.select=function(point_list,name){
 	for (var i=0; i<point_list.length;i+=1){
