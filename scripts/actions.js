@@ -32,7 +32,8 @@ actions.update_all=function(all_points,all_ids){
 			"#food":"Food Unit",
 			"#water":"Water",
 			"#flint":"Flint",
-			"#mine":"Mine Unit"
+			"#mine":"Mine Unit",
+			"#irrigation":"Irrigation Unit"
 
 	};
 	for (var l=0;l<all_ids.length;l+=1){

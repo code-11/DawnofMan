@@ -11,7 +11,7 @@ requirejs(["setups","jquery","actions"], function(setups,$,actions) {
 //var all_points=setups.shelter_test();
 var all_points=setups.main_sim();
 //var all_points=setups.decision_test();
-var all_ids=["#house","#food","#water","#pop","#flint","#mine"];
+var all_ids=["#house","#food","#water","#pop","#flint","#mine","#irrigation"];
 
 //choice_test_full();
 j=0;
