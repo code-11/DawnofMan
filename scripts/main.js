@@ -1,4 +1,4 @@
-requirejs(["setups","jquery","actions"], function(setups,$,actions) {
+requirejs(["setups","jquery","actions","dev_setups"], function(setups,$,actions,dev_setups) {
     //This function is called when scripts/helper/util.js is loaded.
     //If util.js calls define(), then this function is not fired until
     //util's dependencies have loaded, and the util argument will hold
@@ -12,6 +12,7 @@ requirejs(["setups","jquery","actions"], function(setups,$,actions) {
 var all_points=setups.main_sim();
 //var all_points=setups.decision_test();
 var all_ids=["#house","#food","#water","#pop","#flint","#mine","#irrigation"];
+var all_devs=dev_setups.test();
 
 //choice_test_full();
 j=0;
@@ -24,7 +25,7 @@ $(document).ready(function(){
 		}
 	}
     $("#next").click(function(){
-        actions.next(all_points,all_ids);
+        actions.next(all_points,all_ids,all_devs);
     });
     $("#food_source_link").click(function(){
     	actions.switch_to("mainbar","food_source");

@@ -10,8 +10,14 @@ actions.reset_events=function(){
 	$("#events").empty();
 }
 
-actions.next=function(all_points,all_ids){
+actions.next=function(all_points,all_ids,all_devs){
 	actions.reset_events();
+	for(var i=0; i<all_devs.length;i+=1){
+		var devlop=all_devs[i];
+		if (devlop.active==true){
+			devlop.check_results(all_points);
+		}
+	}
 	for(var i = 0;i < all_points.length;i += 1){
 		var point = all_points[i];
 		point.full_calc();
