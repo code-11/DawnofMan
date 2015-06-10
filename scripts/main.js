@@ -30,8 +30,8 @@ $(document).ready(function(){
     $("#food_source_link").click(function(){
     	actions.switch_to("mainbar","food_source");
     });
-    $("#event_delta_link").click(function(){
-    	actions.switch_to("mainbar","event-delta");
+    $("#event_link").click(function(){
+    	actions.switch_to("mainbar","event_box");
     });
     $("#work_alot_link").click(function(){
     	actions.switch_to("mainbar","work_alot");
