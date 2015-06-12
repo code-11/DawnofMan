@@ -58,6 +58,12 @@ flow.Point.prototype.full_calc=function(){
 		this.post_calc();
 	}
 };
+flow.Point.prototype.setVal=function(val){
+	this.value=val;
+	if (this.value<0){
+		this.value=0;
+	}
+}
 
 //Rates don't accumulate, they are set every step.
 //They add all weighted
@@ -266,7 +272,10 @@ flow.debug=function(point){
 }
 
 flow.post_alert=function(text){
-	$("#events").append("<li>"+text+"</li>");
+	var prior_events=$("#events").children();
+	$("#events").empty();
+	$("#events").append("<li>"+j+" "+text+"</li>");
+	$("#events").append(prior_events);
 }
 
 flow.LowAlert=function(point,message){

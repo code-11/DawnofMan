@@ -6,12 +6,10 @@ actions.switch_to=function(main,o_id){
 	$("#"+o_id).css("display","initial");
 }
 
-actions.reset_events=function(){
-	$("#events").empty();
-}
+actions.reset_events=function(){}
 
 actions.next=function(all_points,all_ids,all_devs){
-	actions.reset_events();
+	actions.reset_events(j);
 	for(var i=0; i<all_devs.length;i+=1){
 		var devlop=all_devs[i];
 		if (devlop.active==true){
@@ -31,7 +29,7 @@ actions.next=function(all_points,all_ids,all_devs){
 	j+=1;
 }
 
-actions.update_all=function(all_points,all_ids){
+actions.update_all=function(all_points,all_ids,year){
 	var id_to_disp={
 			"#house":"Shelter Unit",
 			"#pop":"Pop Unit",
@@ -47,7 +45,7 @@ actions.update_all=function(all_points,all_ids){
 		var point=flow.select(all_points,id_to_disp[id]);
 		if (point!=undefined){
 			$(document).ready(function(){
-				$(id).text(point.value.toFixed(2));
+				$(id).text(point.value.toFixed(0));
 			});
 		}else{
 			console.log(id+" was undefined");
