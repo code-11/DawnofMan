@@ -7,7 +7,16 @@ development.addAlert=function(text){
 	$("#events").append("<li>"+j+" "+text+"</li>");
 	$("#events").append(prior_events);
 }
-
+development.addHtmlAlert=function(html,dev_alias){
+	var prior_events=$("#events").children();
+	$("#events").empty();
+	var temp_li=$("<li>"+j+" "+"</li>").attr({
+		id:dev_alias+"li"
+	});
+	$("#events").append(temp_li);
+	$("#"+dev_alias+"li").append(html);
+	$("#events").append(prior_events);
+}
 
 development.D_node=function(alias,msg,start_as_active,all_points){
 	//this.results={};
@@ -63,6 +72,79 @@ development.RandSpawn.prototype.check_results=function(){
     	this.the_result.make_active();
     }
 }
+
+development.BoolChoice=function(alias,start_msg,yes_msg,no_msg,start_as_active,all_points){
+	this.alias=alias;
+	this.start_msg=start_msg;
+	this.yes_msg=yes_msg;
+	this.no_msg=no_msg;
+	this.active=start_as_active;
+	this.all_points=all_points;
+	this.choice=undefined;
+}
+development.BoolChoice.prototype=Object.create(development.D_node.prototype);
+development.BoolChoice.prototype.config_result=function(yes_res,no_res){
+	this.yes_res=yes_res;
+	this.no_res=no_res;
+}
+development.BoolChoice.prototype.enter=function(){
+	var _this=this;
+
+	var yes = document.createElement("button"); 
+	var no = document.createElement("button");
+	var yesno=$("<div></div>").attr({
+		id:this.alias+"div",
+		class:"choice-el"
+	});
+
+	yes.id=this.alias+"yesbtn";
+	yes.onclick=function(){
+		_this.choice=true;
+		yes.remove();
+		no.remove();
+		var yes_text=document.createElement("p");
+		var t = document.createTextNode(_this.yes_msg);
+		yes_text.appendChild(t);
+		yesno.append(yes_text);
+	};
+	var t = document.createTextNode("Yes");       
+	yes.appendChild(t);
+
+	 
+	no.id=this.alias+"nobtn";
+	no.onclick=function(){
+		_this.choice=false;
+		yesno.empty();
+		var no_text=document.createElement("p");
+		var t = document.createTextNode(_this.no_msg);
+		no_text.appendChild(t);
+		yesno.append(no_text);
+	};
+	var t = document.createTextNode("no");       
+	no.appendChild(t);   
+
+	var msg_txt=document.createElement("p");
+	var t = document.createTextNode(this.start_msg);
+	msg_txt.appendChild(t);
+
+
+	yesno.append(msg_txt);
+	yesno.append(yes);
+	yesno.append(no);
+	development.addHtmlAlert(yesno,this.alias);
+}
+development.BoolChoice.prototype.check_results=function(){
+	console.log(this.alias+" is "+this.choice);
+	if(this.choice!==undefined){
+		if (this.choice){
+			this.yes_res.make_active();
+			this.active=false;
+		}else{
+			this.no_res.make_active();
+			this.active=false;
+		}
+	}
+};
 
 //One off one change end to a development chain
 development.End=function(alias,start_as_active,all_points){

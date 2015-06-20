@@ -47,7 +47,33 @@ define(["development","flow"], function (development,flow){
 			}
 		);
 
-		return [food1,food2,pop1,pop2,pop3,pop4,earth1,earth2];
+		var stranger= new development.Rand("stranger",true,all_points);
+		var stranger2= new development.BoolChoice(
+			"stranger2",
+			"A stranger has appeared at the village. \n Should he be accepted?",
+			"You accepted the stranger into the village...",
+			"You denied the stranger entrance...",
+			false,
+			all_points);
+		var strangeryes= new development.End("strangeryes",false,all_points);
+		var strangerno= new development.End("strangerno",false,all_points);
+
+		stranger.config_result(stranger2,.05);
+		stranger2.config_result(strangeryes,strangerno);
+		strangeryes.config_result(
+			function(ap){
+				flow.select(ap,"Pop Unit").setVal(flow.select(ap,"Pop Unit").value+10);
+				flow.select(ap,"Shelter Unit").setVal(flow.select(ap,"Shelter Unit").value+3);
+				development.addAlert("The stranger you accepted brings his family clan to your village.");
+			}
+		);
+		strangerno.config_result(
+			function(ap){
+				development.addAlert("The stranger you denied leaves but curses you as he does so.");
+			}
+		);
+
+		return [food1,food2,pop1,pop2,pop3,pop4,earth1,earth2,stranger,stranger2];
 	}
 	return dev_setups;
 });
