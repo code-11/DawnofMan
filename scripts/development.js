@@ -73,6 +73,57 @@ development.RandSpawn.prototype.check_results=function(){
     }
 }
 
+development.RandChoice=function(alias,msg,start_as_active,all_points){
+	this.alias=alias;
+	this.msg=msg;
+	this.active=start_as_active;
+	this.all_points=all_points;
+}
+development.RandChoice.prototype=Object.create(development.D_node.prototype);
+development.RandChoice.prototype.enter=function(){};
+development.RandChoice.prototype.normalize=function(){
+	var sum=0;
+	for (var name in this.name2prob) {
+		sum+=this.name2prob[name];
+	}
+	for(var name in this.name2prob){
+		this.name2prob[name]=this.name2prob[name]/sum;
+	}
+};
+development.RandChoice.prototype.config_result=function(tup_list){
+	var name2prob={};
+	var name2obj={};
+	for (var i=0;i<tup_list.length;i+=1){
+		var tup=tup_list[i];
+		name2prob[tup[0].alias]=tup[1];
+		name2obj[tup[0].alias]=tup[0];
+	}
+	this.name2prob=name2prob;
+	this.name2obj=name2obj;
+	this.normalize();
+}
+development.RandChoice.prototype.choose=function(){
+	var prob=Math.random();
+	var sum=0;
+	for (var name in this.name2prob){
+		sum+=this.name2prob[name];
+		if (prob<sum){
+			return this.name2obj[name];
+		}
+	}
+}
+development.RandChoice.prototype.check_results=function(){
+	var res=this.choose();
+	//console.log(this.alias+" chose "+res.alias);
+	if (res!==undefined){
+		res.make_active();
+		this.active=false;
+	}
+};
+
+
+
+
 development.BoolChoice=function(alias,start_msg,yes_msg,no_msg,start_as_active,all_points){
 	this.alias=alias;
 	this.start_msg=start_msg;
@@ -114,7 +165,8 @@ development.BoolChoice.prototype.enter=function(){
 	no.id=this.alias+"nobtn";
 	no.onclick=function(){
 		_this.choice=false;
-		yesno.empty();
+		yes.remove();
+		no.remove();
 		var no_text=document.createElement("p");
 		var t = document.createTextNode(_this.no_msg);
 		no_text.appendChild(t);

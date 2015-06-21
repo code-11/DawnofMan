@@ -55,25 +55,50 @@ define(["development","flow"], function (development,flow){
 			"You denied the stranger entrance...",
 			false,
 			all_points);
-		var strangeryes= new development.End("strangeryes",false,all_points);
-		var strangerno= new development.End("strangerno",false,all_points);
+		var strangeryesgood= new development.End("strangeryesgood",false,all_points);
+		var strangernogood= new development.End("strangernogood",false,all_points);
+		var strangeryesbad= new development.End("strangeryesbad",false,all_points);
+		var strangernobad= new development.End("strangernobad",false,all_points);
+		var strangerno=new development.RandChoice("strangerno","",false,all_points);
+		var strangeryes=new development.RandChoice("strangeryes","",false,all_points);
 
-		stranger.config_result(stranger2,.05);
+
+		stranger.config_result(stranger2,1);
 		stranger2.config_result(strangeryes,strangerno);
-		strangeryes.config_result(
+		strangeryesgood.config_result(
 			function(ap){
 				flow.select(ap,"Pop Unit").setVal(flow.select(ap,"Pop Unit").value+10);
 				flow.select(ap,"Shelter Unit").setVal(flow.select(ap,"Shelter Unit").value+3);
 				development.addAlert("The stranger you accepted brings his family clan to your village.");
 			}
 		);
-		strangerno.config_result(
+		strangeryesbad.config_result(
+			function(ap){
+				flow.select(ap,"Pop Unit").setVal(flow.select(ap,"Pop Unit").value-3);
+				development.addAlert("The stranger you accepted was mentally ill. Once inside the village it was clear he had to be subdued and some villigers were killed in the process.");
+			}
+		);
+		strangernogood.config_result(
 			function(ap){
 				development.addAlert("The stranger you denied leaves but curses you as he does so.");
 			}
 		);
+		strangernobad.config_result(
+			function(ap){
+				flow.select(ap,"Food Unit").setVal(flow.select(ap,"Food Unit").value*.9);
+				development.addAlert("The stranger you denied snuck over the wall and set fire to the store houses. Much food was lost but the stranger was eventually stopped.");
+			}
+		);
+		strangeryes.config_result([
+			[strangeryesbad,  .5],
+			[strangeryesgood, .5]
+		]);
+		strangerno.config_result([
+			[strangernobad,   .6],
+			[strangernogood,  .4]
+		]);
 
-		return [food1,food2,pop1,pop2,pop3,pop4,earth1,earth2,stranger,stranger2];
+		return [food1,food2,pop1,pop2,pop3,pop4,earth1,earth2,stranger,stranger2,strangerno,strangeryes];
 	}
 	return dev_setups;
 });
