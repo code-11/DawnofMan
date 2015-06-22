@@ -37,7 +37,8 @@ actions.update_all=function(all_points,all_ids,year){
 			"#water":"Water",
 			"#flint":"Flint",
 			"#mine":"Mine Unit",
-			"#irrigation":"Irrigation Unit"
+			"#irrigation":"Irrigation Unit",
+			"#fort":"Fort Unit"
 
 	};
 	for (var l=0;l<all_ids.length;l+=1){

@@ -212,10 +212,10 @@ setups.main_sim=function(){
 	var water_inflow= new flow.Source("Water Inflow",100);
 	var water_clamp = new flow.LowClamp(water,0,0);
 	var thirst      = new flow.Dup("Thirst"        ,0);
-	var thirst_alert = new flow.PresenceAlert(thirst,"The people cry for water! The weak and old collapse dead in the streets!");
+	var thirst_alert= new flow.PresenceAlert(thirst,"The people cry for water! The weak and old collapse dead in the streets!");
 	var thirst_clamp= new flow.LowClamp(thirst,0,0);
 	var hunger      = new flow.Dup("Hunger"       ,0);
-	var hunger_alert = new flow.PresenceAlert(hunger,"There is no more food! The weak and old collapse dead in the streets!");
+	var hunger_alert= new flow.PresenceAlert(hunger,"There is no more food! The weak and old collapse dead in the streets!");
 	var food        = new flow.Point("Food Unit"   ,10000);
 	var food_clamp	= new flow.LowClamp(food,0,0);
 	var hunger_clamp= new flow.LowClamp(hunger,0,0);
@@ -257,7 +257,11 @@ setups.main_sim=function(){
 	var mine_temp      = new flow.Mult("Mine Building Rate");
 	var mine_perc      = new flow.Source("Mine Building Percent",0);
 	var mine_path      = new flow.Path(mine_perc,"mine_build_path","constr_alot");
-	var constr_alotment= new flow.Decision([shelter_path,irrigation_path, mine_path],"constr_type","constr_alot");
+	var fort           = new flow.Point("Fort Unit",0);
+	var fort_temp      = new flow.Mult("Fortification Rate");
+	var fort_perc      = new flow.Source("Fortification Percent",0);
+	var fort_path      = new flow.Path(fort_perc,"fort_build_path","constr_alot");
+	var constr_alotment= new flow.Decision([shelter_path,irrigation_path, mine_path,fort_path],"constr_type","constr_alot");
 	
 	var mine_inef_alert= new flow.GreaterAlert(mining_force,mine,10,"There is not enough space in the mines.");
 	var mine_limit     = new flow.Least("Mine Limit");
@@ -307,6 +311,9 @@ setups.main_sim=function(){
 	construct_force.conn_to(mine_temp,1);
 	mine_perc.conn_to(mine_temp,1);
 	mine_temp.conn_to(mine,.05);
+	construct_force.conn_to(fort_temp,1);
+	fort_perc.conn_to(fort_temp,1);
+	fort_temp.conn_to(fort,.07);
 
 	//EXPOSURE
 	shelter.conn_to(exposure,-1);
@@ -328,7 +335,11 @@ setups.main_sim=function(){
 	var water_stuff=[water_inflow,water,thirst,thirst_alert,water_clamp,thirst_clamp];
 	var food_stuff=[food,hunger,hunger_alert,food_clamp,hunger_clamp];
 	var work_stuff=[work,gather_path,construct_path,mining_path,work_alotment,food_force,construct_force,mining_force];//[nat_eff,eff,work]
-	var constr_stuff=[irrigation_path,shelter_path,mine_path,constr_alotment,irrigation_temp,shelter_temp,mine_temp,irrigation,shelter,mine]
+	var constr_paths=[irrigation_path,shelter_path,mine_path,fort_path];
+	var constr_temps=[irrigation_temp,shelter_temp,mine_temp,fort_temp];
+	var constructions=[irrigation,shelter,mine,fort];
+	var constr_stuff=constr_paths.concat([constr_alotment]).concat(constr_temps).concat(constructions);
+	//var constr_stuff=[irrigation_path,shelter_path,mine_path,constr_alotment,irrigation_temp,shelter_temp,mine_temp,irrigation,shelter,mine]
 	var mining_stuff=[mine_limit,mine_inef_alert,flint];
 	var exposure_stuff=[exposure,exposure_alert,exposure_clamp];
 	var food_source_stuff=[hunt_path,farm_path,idle_path,type_of_food,hunt,farm];
