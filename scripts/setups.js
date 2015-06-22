@@ -202,7 +202,7 @@ setups.main_sim=function(){
 	var pop_delta   = new flow.Mult("Pop Delta"    ,1);
 	var nat_pop_rate= new flow.Source("Nat Pop Rate",.003);//realistic is .00003
 	var pop_rate    = new flow.Rate("Pop Rate"     ,0);
-	var pop         = new flow.Point("Pop Unit"    ,90);
+	var pop         = new flow.Point("Pop Unit"    ,50);
 	var pop_alert   = new flow.LowAlert(pop,"Your people are broken. They are no more.");
 	var pop_clamp   = new flow.LowClamp(pop,1,-1);
 	//var eff         = new flow.Mult("Efficiency"   ,1);
@@ -242,7 +242,7 @@ setups.main_sim=function(){
 	var farm= new flow.Mult("Farming" ,0);
 	var type_of_food= new flow.Decision([hunt_path,farm_path,idle_path],"food_type","food_source");
 
-	var shelter        = new flow.Point("Shelter Unit"     ,0);
+	var shelter        = new flow.Point("Shelter Unit"     ,60);
 	var shelter_temp   = new flow.Mult("Shelter Rate"); 
 	var shelter_perc   = new flow.Source("Shelter Percent" ,0);
 	var shelter_path   = new flow.Path(shelter_perc,"shelter_path","constr_alot");

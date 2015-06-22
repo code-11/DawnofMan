@@ -1,6 +1,15 @@
 define(["development","flow"], function (development,flow){
 	var  dev_setups = dev_setups ||  {};
 	dev_setups.test=function(all_points){
+		var start = new development.Rand("start",true,all_points);
+		var start2= new development.End("start2",false,all_points);
+		start.config_result(start2,1);
+		start2.config_result(
+			function(ap){
+				development.addAlert("You are the head man of a small village in neolithic time. Do you have what it take to survive and achieve greatness?");
+			}
+		);
+
 		var food1= new development.RandSpawn("food1",true,all_points);
 		var food2= new development.End("food2",false,all_points);
 
@@ -98,7 +107,7 @@ define(["development","flow"], function (development,flow){
 			[strangernogood,  .4]
 		]);
 
-		return [food1,food2,pop1,pop2,pop3,pop4,earth1,earth2,stranger,stranger2,strangerno,strangeryes];
+		return [start,start2,food1,food2,pop1,pop2,pop3,pop4,earth1,earth2,stranger,stranger2,strangerno,strangeryes];
 	}
 	return dev_setups;
 });

@@ -203,8 +203,14 @@ flow.Path.prototype.init_title=function(){
 flow.Path.prototype.init_disp=function(){
 	var temp_p=document.createElement("P");
 	var temp_txt=document.createTextNode("0");
+	var temp_arr=document.createElement("P");
+	var temp_arr_txt=document.createTextNode("→");
+	temp_arr.appendChild(temp_arr_txt);
 	temp_p.appendChild(temp_txt);
 	temp_p.id=this.disp_id;
+	temp_p.className="inline";
+	temp_arr.className="inline";
+	this.root.appendChild(temp_arr)
 	this.root.appendChild(temp_p);
 	this.disp_html=temp_p;
 }
@@ -213,14 +219,42 @@ flow.Path.prototype.init_input=function(){
 	temp_in.id=this.name;
 	temp_in.type="number";
 	temp_in.value=1;
+	temp_in.className="inline";
 	this.root.appendChild(temp_in);
 	this.input_html=temp_in;
 	//console.log(temp_in);
+}
+flow.Path.prototype.set_all_onlick=function(){
+	for (var i=0;i<this.decision.paths.length;i+=1){
+		var el=this.decision.paths[i];
+		if (el!=this){
+			var val=0;
+			el.disp_html.innerText=val.toFixed(2);
+			el.input_html.value=val;
+			el.value=val;
+		}else{
+			var val=1.00;
+			el.disp_html.innerText=val.toFixed(2);
+			el.input_html.value=val;
+			el.value=val;
+		}
+	}
+}
+flow.Path.prototype.init_set_all=function(){
+	var temp_in=document.createElement("input");
+	temp_in.value="Set as Full";
+	temp_in.type="Button";
+	temp_in.id=this.name+"btn";
+	temp_in.className="inline-push";
+	var _this=this;
+	temp_in.onclick=function(){_this.set_all_onlick(_this)};
+	this.root.appendChild(temp_in);	
 }
 flow.Path.prototype.init=function(){
 	this.init_title();
 	this.init_input();
 	this.init_disp();
+	this.init_set_all();
 }
 flow.Path.prototype.full_calc=function(){
 	this.point.value=this.value//parseFloat(this.disp_html.innerText);
@@ -255,14 +289,22 @@ flow.Decision.prototype.the_on_click=function(_this){
 			}
 		}
 }
+flow.Decision.prototype.init_paths=function(){
+	for (var i=0; i<this.paths.length;i+=1){
+		this.paths[i].decision=this;
+	}
+}
 flow.Decision.prototype.init=function(){
+	var temp_br=document.createElement("br");
 	var temp_in=document.createElement("input");
 	temp_in.value="Normalize";
 	temp_in.type="Button";
 	temp_in.id=this.name;
 	var _this=this;
 	temp_in.onclick=function(){_this.the_on_click(_this)};
+	this.root.appendChild(temp_br);
 	this.root.appendChild(temp_in);
+	this.init_paths();
 }
 flow.Decision.prototype.display=function(){}
 flow.Decision.prototype.full_calc=function(){}
