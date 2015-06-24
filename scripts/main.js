@@ -39,9 +39,13 @@ $(document).ready(function(){
     $("#constr_alot_link").click(function(){
     	actions.switch_to("mainbar","constr_alot");
     });
+    $("#craft_alot_link").click(function(){
+        actions.switch_to("mainbar","craft_alot");
+    });
     $("#food_source").css("display","none");
     $("#work_alot").css("display","none");
     $("#constr_alot").css("display","none");
+    $("#craft_alot").css("display","none");
 });
 
 });
