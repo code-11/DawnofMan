@@ -238,6 +238,17 @@ setups.main_sim=function(){
 	var work_alotment  =new flow.Decision([gather_path,construct_path,mining_path,soldier_path,craft_path],"work_type","work_alot");
 
 
+	var weapon_perc   =new flow.Source("Weapon Percent",0);
+	var tool_perc     =new flow.Source("Tool Percent",0);
+	var weapon_path   =new flow.Path(weapon_perc,"weapon_path","craft_alot");
+	var tool_path     =new flow.Path(tool_perc,"tool_path","craft_alot");
+	var weapon_temp   =new flow.Mult("Weapon Rate",0);
+	var tool_temp     =new flow.Mult("Tool Rate"  ,0);
+	var weapons       =new flow.Point("Weapons"   ,0);
+	var tools         =new flow.Point("Tools"     ,0);
+	var craft_alotment = new flow.Decision([weapon_path,tool_path],"craft_type","craft_alot");
+
+
 	var hunt_perc= new flow.Source("Hunting Percent" ,0);
 	var farm_perc= new flow.Source("Farming Percent" ,0);
 	var idle_perc= new flow.Source("Idle    Percent" ,0);
@@ -325,6 +336,14 @@ setups.main_sim=function(){
 	fort_perc.conn_to(fort_temp,1);
 	fort_temp.conn_to(fort,.07);
 
+	//CRAFTWORK
+	craft_force.conn_to(tool_temp,1);
+	tool_perc.conn_to(tool_temp,1);
+	tool_temp.conn_to(tools,1);
+	craft_force.conn_to(weapon_temp,1);
+	weapon_perc.conn_to(weapon_temp,1);
+	weapon_temp.conn_to(weapons,1);
+
 	//EXPOSURE
 	shelter.conn_to(exposure,-1);
 	pop.conn_to(exposure,1);
@@ -345,16 +364,23 @@ setups.main_sim=function(){
 	var water_stuff=[water_inflow,water,thirst,thirst_alert,water_clamp,thirst_clamp];
 	var food_stuff=[food,hunger,hunger_alert,food_clamp,hunger_clamp];
 	var work_stuff=[work,gather_path,construct_path,mining_path,soldier_path,craft_path,work_alotment,food_force,construct_force,mining_force,soldier_force,craft_force];//[nat_eff,eff,work]
+	
 	var constr_paths=[irrigation_path,shelter_path,mine_path,fort_path];
 	var constr_temps=[irrigation_temp,shelter_temp,mine_temp,fort_temp];
 	var constructions=[irrigation,shelter,mine,fort];
 	var constr_stuff=constr_paths.concat([constr_alotment]).concat(constr_temps).concat(constructions);
+
+	var craft_paths=[weapon_path,tool_path];
+	var craft_temps=[weapon_temp,tool_temp];
+	var crafts=[weapons,tools];
+	var craft_stuff=craft_paths.concat([craft_alotment]).concat(craft_temps).concat(crafts);
+
 	//var constr_stuff=[irrigation_path,shelter_path,mine_path,constr_alotment,irrigation_temp,shelter_temp,mine_temp,irrigation,shelter,mine]
 	var mining_stuff=[mine_limit,mine_inef_alert,flint];
 	var exposure_stuff=[exposure,exposure_alert,exposure_clamp];
 	var food_source_stuff=[hunt_path,farm_path,idle_path,type_of_food,hunt,farm];
 
-	return pop_stuff.concat(water_stuff).concat(food_stuff).concat(work_stuff).concat(mining_stuff).concat(constr_stuff).concat(exposure_stuff).concat(food_source_stuff);
+	return pop_stuff.concat(water_stuff).concat(food_stuff).concat(work_stuff).concat(mining_stuff).concat(constr_stuff).concat(exposure_stuff).concat(food_source_stuff).concat(craft_stuff);
 }
 
 return setups;
