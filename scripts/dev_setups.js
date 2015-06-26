@@ -72,7 +72,7 @@ define(["development","flow"], function (development,flow){
 		var strangeryes=new development.RandChoice("strangeryes","",false,all_points);
 
 
-		stranger.config_result(stranger2,1);
+		stranger.config_result(stranger2,.05);
 		stranger2.config_result(strangeryes,strangerno);
 		strangeryesgood.config_result(
 			function(ap){

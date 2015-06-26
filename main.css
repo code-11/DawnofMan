@@ -79,6 +79,7 @@
         flex:1;
         height:85vh;
         width:100%;
+        margin-left:5vw;
       }
       #event_box{
         width:90%;

@@ -6,6 +6,18 @@ actions.switch_to=function(main,o_id){
 	$("#"+o_id).css("display","initial");
 }
 
+actions.sidebar_to_basic=function(){
+	$("#sidebar-advanced").css("display","none");
+	$("#sidebar-basic").css("display","initial");
+}
+actions.sidebar_to_advanced=function(){
+	$("#sidebar-basic").css("display","none");
+	$("#sidebar-advanced").css("display","initial");
+}
+
+actions.update_time=function(new_time){
+	$("#time").text(new_time);
+}
 actions.reset_events=function(){}
 
 actions.next=function(all_points,all_ids,all_devs){
@@ -26,6 +38,7 @@ actions.next=function(all_points,all_ids,all_devs){
 	}
 	console.log("----------- "+(j+1));
 	actions.update_all(all_points,all_ids);
+	actions.update_time(j);
 	j+=1;
 }
 
