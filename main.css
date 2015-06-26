@@ -75,6 +75,11 @@
         border:1px solid gray;
         padding: 2px;
       }
+      .click-actor{
+        font-weight:bold;
+        cursor: pointer; 
+        color: DarkRed;
+      }
       #mainbar{
         flex:1;
         height:85vh;
