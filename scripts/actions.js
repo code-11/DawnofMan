@@ -1,4 +1,4 @@
-define(["./flow","jquery"], function(flow,$) {
+define(["./flow","jquery","time"], function(flow,$,time) {
 var actions = actions || {};
 
 actions.switch_to=function(main,o_id){
@@ -20,8 +20,8 @@ actions.update_time=function(new_time){
 }
 actions.reset_events=function(){}
 
-actions.next=function(all_points,all_ids,all_devs){
-	actions.reset_events(j);
+actions.next=function(all_points,all_ids,all_devs,clock){
+	actions.reset_events(clock.getTime());
 	for(var i=0; i<all_devs.length;i+=1){
 		var devlop=all_devs[i];
 		if (devlop.active==true){
@@ -36,10 +36,11 @@ actions.next=function(all_points,all_ids,all_devs){
 		var point=all_points[k];
 		point.display();
 	}
-	console.log("----------- "+(j+1));
+	console.log("----------- "+(clock.getTime()+1));
 	actions.update_all(all_points,all_ids);
-	actions.update_time(j);
-	j+=1;
+	actions.update_time(clock.getTime());
+	clock.tick();
+	//j+=1;
 }
 
 actions.update_all=function(all_points,all_ids,year){

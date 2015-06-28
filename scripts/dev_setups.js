@@ -6,7 +6,7 @@ define(["development","flow"], function (development,flow){
 		start.config_result(start2,1);
 		start2.config_result(
 			function(ap){
-				development.addAlert("You are the head man of a small village in neolithic time. Do you have what it take to survive and achieve greatness?");
+				start2.addAlert("You are the head man of a small village in neolithic time. Do you have what it take to survive and achieve greatness?");
 			}
 		);
 
@@ -17,7 +17,7 @@ define(["development","flow"], function (development,flow){
 		food2.config_result(
 			function(ap){
 				flow.select(ap,"Food Unit").setVal(flow.select(ap,"Food Unit").value-2000)
-				development.addAlert("Some of the food stores have spoiled!");
+				food2.addAlert("Some of the food stores have spoiled!");
 			}
 		);
 
@@ -28,7 +28,7 @@ define(["development","flow"], function (development,flow){
 		pop2.config_result(
 			function(ap){
 				flow.select(ap,"Pop Unit").setVal(flow.select(ap,"Pop Unit").value*.5)
-				development.addAlert("A deadly disease has hit your village. Bodies line the streets!");
+				pop2.addAlert("A deadly disease has hit your village. Bodies line the streets!");
 			}
 		);
 
@@ -39,7 +39,7 @@ define(["development","flow"], function (development,flow){
 		pop4.config_result(
 			function(ap){
 				flow.select(ap,"Pop Unit").setVal(flow.select(ap,"Pop Unit").value+30);
-				development.addAlert("Refugees from a distant war steam into your town.");
+				pop4.addAlert("Refugees from a distant war steam into your town.");
 			}
 		);
 
@@ -52,7 +52,7 @@ define(["development","flow"], function (development,flow){
 				flow.select(ap,"Pop Unit").setVal(flow.select(ap,"Pop Unit").value*.9);
 				flow.select(ap,"Shelter Unit").setVal(flow.select(ap,"Shelter Unit").value*.5);
 				flow.select(ap,"Mine Unit").setVal(flow.select(ap,"Mine Unit").value*.5);
-				development.addAlert("The ground shakes terribly. Buildings fall all around. Mines collapse!");
+				earth2.addAlert("The ground shakes terribly. Buildings fall all around. Mines collapse!");
 			}
 		);
 
@@ -78,24 +78,24 @@ define(["development","flow"], function (development,flow){
 			function(ap){
 				flow.select(ap,"Pop Unit").setVal(flow.select(ap,"Pop Unit").value+10);
 				flow.select(ap,"Shelter Unit").setVal(flow.select(ap,"Shelter Unit").value+3);
-				development.addAlert("The stranger you accepted brings his family clan to your village.");
+				strangeryesgood.addAlert("The stranger you accepted brings his family clan to your village.");
 			}
 		);
 		strangeryesbad.config_result(
 			function(ap){
 				flow.select(ap,"Pop Unit").setVal(flow.select(ap,"Pop Unit").value-3);
-				development.addAlert("The stranger you accepted was mentally ill. Once inside the village it was clear he had to be subdued and some villigers were killed in the process.");
+				strangeryesbad.addAlert("The stranger you accepted was mentally ill. Once inside the village it was clear he had to be subdued and some villigers were killed in the process.");
 			}
 		);
 		strangernogood.config_result(
 			function(ap){
-				development.addAlert("The stranger you denied leaves but curses you as he does so.");
+				strangernogood.addAlert("The stranger you denied leaves but curses you as he does so.");
 			}
 		);
 		strangernobad.config_result(
 			function(ap){
 				flow.select(ap,"Food Unit").setVal(flow.select(ap,"Food Unit").value*.9);
-				development.addAlert("The stranger you denied snuck over the wall and set fire to the store houses. Much food was lost but the stranger was eventually stopped.");
+				strangernobad.addAlert("The stranger you denied snuck over the wall and set fire to the store houses. Much food was lost but the stranger was eventually stopped.");
 			}
 		);
 		strangeryes.config_result([
