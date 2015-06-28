@@ -20,8 +20,8 @@ actions.update_time=function(new_time){
 }
 actions.reset_events=function(){}
 
-actions.next=function(all_points,all_ids,all_devs,clock){
-	actions.reset_events(clock.getTime());
+actions.next=function(all_points,all_ids,all_devs){
+	actions.reset_events(time.the_clock.getTime());
 	for(var i=0; i<all_devs.length;i+=1){
 		var devlop=all_devs[i];
 		if (devlop.active==true){
@@ -36,10 +36,10 @@ actions.next=function(all_points,all_ids,all_devs,clock){
 		var point=all_points[k];
 		point.display();
 	}
-	console.log("----------- "+(clock.getTime()+1));
+	console.log("----------- "+(time.the_clock.getTime()+1));
 	actions.update_all(all_points,all_ids);
-	actions.update_time(clock.getTime());
-	clock.tick();
+	actions.update_time(time.the_clock.getTime());
+	time.the_clock.tick();
 	//j+=1;
 }
 

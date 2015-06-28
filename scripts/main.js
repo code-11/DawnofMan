@@ -16,15 +16,6 @@ var all_devs=dev_setups.test(all_points);
 
 //choice_test_full();
 j=0;
-var clock=new time.Time(0);
-
-//give all points a reference to the master clock in case they need it
-for (var i=0;i<all_points.length;i+=1){
-    all_points[i].config_clock(clock);
-}
-for (var i=0;i<all_devs.length;i+=1){
-    all_devs[i].config_clock(clock);
-}
 
 $(document).ready(function(){
 	for(var i=0;i<all_points.length;i+=1){
@@ -34,7 +25,7 @@ $(document).ready(function(){
 		}
 	}
     $("#next").click(function(){
-        actions.next(all_points,all_ids,all_devs,clock);
+        actions.next(all_points,all_ids,all_devs);
     });
     $("#food_source_link").click(function(){
     	actions.switch_to("mainbar","food_source");

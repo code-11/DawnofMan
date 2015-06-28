@@ -1,13 +1,13 @@
-define(["flow"], function (flow){
+define(["flow","time"], function (flow,time){
 var  development = development ||  {};
 
-development.addAlert=function(text,time){
+development.addAlert=function(text){
 	var prior_events=$("#events").children();
 	$("#events").empty();
 	$("#events").append("<li>"+j+" "+text+"</li>");
 	$("#events").append(prior_events);
 }
-development.addHtmlAlert=function(html,dev_alias,time){
+development.addHtmlAlert=function(html,dev_alias){
 	var prior_events=$("#events").children();
 	$("#events").empty();
 	var temp_li=$("<li>"+j+" "+"</li>").attr({
@@ -37,19 +37,16 @@ development.D_node.prototype.make_active=function(){
 	this.active=true;
 	this.enter();
 }
-development.D_node.prototype.config_clock=function(clock){
-	this.clock=clock;
-}
 development.D_node.prototype.addAlert=function(text){
 	var prior_events=$("#events").children();
 	$("#events").empty();
-	$("#events").append("<li>"+this.clock.getTime()+" "+text+"</li>");
+	$("#events").append("<li>"+time.the_clock.getTime()+" "+text+"</li>");
 	$("#events").append(prior_events);
 }
 development.D_node.prototype.addHtmlAlert=function(html,dev_alias){
 	var prior_events=$("#events").children();
 	$("#events").empty();
-	var temp_li=$("<li>"+this.clock.getTime()+" "+"</li>").attr({
+	var temp_li=$("<li>"+time.the_clock.getTime()+" "+"</li>").attr({
 		id:dev_alias+"li"
 	});
 	$("#events").append(temp_li);
@@ -202,7 +199,7 @@ development.BoolChoice.prototype.enter=function(){
 	yesno.append(msg_txt);
 	yesno.append(yes);
 	yesno.append(no);
-	yesno.addHtmlAlert(yesno,this.alias);
+	this.addHtmlAlert(yesno,this.alias);
 }
 development.BoolChoice.prototype.check_results=function(){
 	console.log(this.alias+" is "+this.choice);

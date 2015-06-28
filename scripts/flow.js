@@ -1,4 +1,4 @@
-define(["./comb","jquery"], function (comb,$){
+define(["./comb","jquery","time"], function (comb,$,time){
 var flow = flow || {};
 
 flow.Point = function(name,init_val){
@@ -9,9 +9,6 @@ flow.Point = function(name,init_val){
 	this.debug=false;
 	this.disabled=false;
 };
-flow.Point.prototype.config_clock=function(clock){
-	this.clock=clock;
-}
 flow.Point.prototype.conn_to= function(o_point,weight){
 		for (var i=0; i<o_point.conns.length;i+=1){
 			el=o_point.conns[i][0];
@@ -174,10 +171,6 @@ flow.LowClamp.prototype.full_calc=function(){
 };
 flow.LowClamp.prototype.display=function(){};
 
-flow.LowClamp.prototype.config_clock=function(clock){
-	this.clock=clock;
-}
-
 flow.HighClamp=function(point,value,fudge){
 	this.value=value;
 	this.target=point;
@@ -189,10 +182,6 @@ flow.HighClamp.prototype=Object.create(flow.LowClamp.prototype);
 flow.HighClamp.prototype.full_calc=function(){
 	comb.high_clamp(this);
 };
-
-flow.HighClamp.prototype.config_clock=function(clock){
-	this.clock=clock;
-}
 
 flow.Path=function(point,name,html_root){
 	this.point=point;
@@ -271,10 +260,6 @@ flow.Path.prototype.full_calc=function(){
 	this.point.value=this.value//parseFloat(this.disp_html.innerText);
 }
 
-flow.Path.prototype.config_clock=function(clock){
-	this.clock=clock;
-}
-
 flow.Decision=function(paths,name,root){
 	this.paths=paths;
 	this.name=name;
@@ -324,10 +309,6 @@ flow.Decision.prototype.init=function(){
 flow.Decision.prototype.display=function(){}
 flow.Decision.prototype.full_calc=function(){}
 
-flow.Decision.prototype.config_clock=function(clock){
-	this.clock=clock;
-}
-
 flow.debug=function(point){
 	point.debug=true;
 }
@@ -335,7 +316,7 @@ flow.debug=function(point){
 flow.post_alert=function(text){
 	var prior_events=$("#events").children();
 	$("#events").empty();
-	$("#events").append("<li>"+j+" "+text+"</li>");
+	$("#events").append("<li>"+time.the_clock.getTime()+" "+text+"</li>");
 	$("#events").append(prior_events);
 }
 
@@ -349,9 +330,7 @@ flow.LowAlert.prototype.full_calc=function(){
 		flow.post_alert(this.msg);
 	}
 }
-flow.LowAlert.prototype.config_clock=function(clock){
-	this.clock=clock;
-}
+
 flow.PresenceAlert=function(point,message){
 	this.point=point;
 	this.msg=message;
@@ -362,9 +341,7 @@ flow.PresenceAlert.prototype.full_calc=function(){
 		flow.post_alert(this.msg);
 	}
 }
-flow.PresenceAlert.prototype.config_clock=function(clock){
-	this.clock=clock;
-}
+
 flow.GreaterAlert=function(point,o_point,coeff,msg){
 	this.point=point;
 	this.o_point=o_point;
@@ -377,10 +354,6 @@ flow.GreaterAlert.prototype.full_calc=function(){
 		flow.post_alert(this.msg);
 	}
 }
-flow.GreaterAlert.prototype.config_clock=function(clock){
-	this.clock=clock;
-}
-
 
 flow.select=function(point_list,name){
 	for (var i=0; i<point_list.length;i+=1){

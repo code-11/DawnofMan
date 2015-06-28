@@ -12,4 +12,5 @@ time.Time.prototype.setTime=function(new_val){
 time.Time.prototype.tick=function(){
 	this.value+=1;
 }
+time.the_clock=new time.Time(0);
 define(time);
