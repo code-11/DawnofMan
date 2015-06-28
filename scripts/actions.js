@@ -21,25 +21,30 @@ actions.update_time=function(new_time){
 actions.reset_events=function(){}
 
 actions.next=function(all_points,all_ids,all_devs){
-	actions.reset_events(time.the_clock.getTime());
-	for(var i=0; i<all_devs.length;i+=1){
-		var devlop=all_devs[i];
-		if (devlop.active==true){
-			devlop.check_results(all_points);
+	if (flow.select(all_points,"Pop Unit").value>1)
+	{
+		actions.reset_events(time.the_clock.getTime());
+		for(var i=0; i<all_devs.length;i+=1){
+			var devlop=all_devs[i];
+			if (devlop.active==true){
+				devlop.check_results(all_points);
+			}
 		}
+		for(var i = 0;i < all_points.length;i += 1){
+			var point = all_points[i];
+			point.full_calc();
+		}
+		for(var k=0;k<all_points.length;k+=1){
+			var point=all_points[k];
+			point.display();
+		}
+		console.log("----------- "+(time.the_clock.getTime()+1));
+		actions.update_all(all_points,all_ids);
+		actions.update_time(time.the_clock.getTime());
+		time.the_clock.tick();
+	}else{
+		flow.post_alert("Your people are broken. They are no more.");
 	}
-	for(var i = 0;i < all_points.length;i += 1){
-		var point = all_points[i];
-		point.full_calc();
-	}
-	for(var k=0;k<all_points.length;k+=1){
-		var point=all_points[k];
-		point.display();
-	}
-	console.log("----------- "+(time.the_clock.getTime()+1));
-	actions.update_all(all_points,all_ids);
-	actions.update_time(time.the_clock.getTime());
-	time.the_clock.tick();
 	//j+=1;
 }
 
