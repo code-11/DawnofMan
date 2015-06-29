@@ -59,8 +59,8 @@ actions.update_all=function(all_points,all_ids,year){
 			"#irrigation":"Irrigation Unit",
 			"#fort":"Fort Unit",
 			"#weapons":"Weapons",
-			"#tools":"Tools"
-
+			"#tools":"Tools",
+			"#water_env":"Available Water"
 	};
 	for (var l=0;l<all_ids.length;l+=1){
 		var id=all_ids[l];

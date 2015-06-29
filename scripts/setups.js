@@ -208,15 +208,17 @@ setups.main_sim=function(){
 	//var eff         = new flow.Mult("Efficiency"   ,1);
 	//var nat_eff     = new flow.Source("Nat Efficiency",10);
 	var work        = new flow.Rate("Work"         ,0);
-	var water       = new flow.Rate("Water"        ,0);
+	var water       = new flow.Point("Water"        ,1000);
+	var water_env   = new flow.Rate("Available Water",0); 
 	var water_inflow= new flow.Source("Water Inflow",100);
 	var water_clamp = new flow.LowClamp(water,0,0);
+	var water_limit = new flow.Least("Water Limit");
 	var thirst      = new flow.Dup("Thirst"        ,0);
 	var thirst_alert= new flow.PresenceAlert(thirst,"The people cry for water! The weak and old collapse dead in the streets!");
 	var thirst_clamp= new flow.LowClamp(thirst,0,0);
 	var hunger      = new flow.Dup("Hunger"       ,0);
 	var hunger_alert= new flow.PresenceAlert(hunger,"There is no more food! The weak and old collapse dead in the streets!");
-	var food        = new flow.Point("Food Unit"   ,10000);
+	var food        = new flow.Point("Food Unit"   ,1000);
 	var food_clamp	= new flow.LowClamp(food,0,0);
 	var hunger_clamp= new flow.LowClamp(hunger,0,0);
 
@@ -225,18 +227,22 @@ setups.main_sim=function(){
 	var mining_perc    =new flow.Source("Mining Percent",0);
 	var soldier_perc   =new flow.Source("Soldier Percent",0);
 	var craft_perc     =new flow.Source("Craft Percent"  ,0);
-	var food_force     =new flow.Mult  ("Food Force",0);
+	var water_perc     =new flow.Source("Water Percent"  ,0);
+	var food_force     =new flow.Mult  ("Food Force"     ,0);
 	var construct_force=new flow.Mult  ("Construct Force",0);
 	var mining_force   =new flow.Mult  ("Mining Force",   0);
 	var soldier_force  =new flow.Mult  ("Soldier Force",  0);
 	var craft_force    =new flow.Mult  ("Craft Force"  ,  0);
+	var water_force    =new flow.Mult  ("Water Force"  ,  0);
 	var gather_path    =new flow.Path  (gather_perc,"gather_path","work_alot");
 	var construct_path =new flow.Path  (construct_perc,"construct_path","work_alot");
 	var mining_path    =new flow.Path  (mining_perc,"mining_path","work_alot");
 	var soldier_path   =new flow.Path  (soldier_perc,"soldier_path","work_alot");
 	var craft_path     =new flow.Path  (craft_perc,"craft_path","work_alot");
-	var work_alotment  =new flow.Decision([gather_path,construct_path,mining_path,soldier_path,craft_path],"work_type","work_alot");
+	var water_path     =new flow.Path  (water_perc,"water_path","work_alot");
+	var work_alotment  =new flow.Decision([gather_path,construct_path,mining_path,soldier_path,craft_path,water_path],"work_type","work_alot");
 
+	var water_inef_alert= new flow.GreaterAlert(water_force,water_env,.1,"People crowd the river trying to get water.");
 
 	var weapon_perc   =new flow.Source("Weapon Percent",0);
 	var tool_perc     =new flow.Source("Tool Percent",0);
@@ -297,7 +303,10 @@ setups.main_sim=function(){
 
 	//WATER
 	pop.conn_to(water,-1);
-	water_inflow.conn_to(water,1);
+	water_inflow.conn_to(water_env,1);
+	water_env.conn_to(water_limit,1);
+	water_force.conn_to(water_limit,10);
+	water_limit.conn_to(water,1);
 	water.conn_to(thirst,-1);
 	thirst.conn_to(pop,-.1);
 
@@ -311,11 +320,13 @@ setups.main_sim=function(){
 	work.conn_to(mining_force,1);
 	work.conn_to(soldier_force,1);
 	work.conn_to(craft_force,1);
+	work.conn_to(water_force,1);
 	gather_perc.conn_to(food_force,1);
 	construct_perc.conn_to(construct_force,1);
 	mining_perc.conn_to(mining_force,1);
 	soldier_perc.conn_to(soldier_force,1);
 	craft_perc.conn_to(craft_force,1);
+	water_perc.conn_to(water_force,1);
 
 	//MINING
 	mining_force.conn_to(mine_limit,1);
@@ -361,9 +372,9 @@ setups.main_sim=function(){
 
 
 	var pop_stuff=[nat_pop_rate,pop_rate,pop_delta,pop,pop_alert,pop_clamp];
-	var water_stuff=[water_inflow,water,thirst,thirst_alert,water_clamp,thirst_clamp];
+	var water_stuff=[water_inflow,water_env,water_limit,water_inef_alert,water,thirst,thirst_alert,water_clamp,thirst_clamp];
 	var food_stuff=[food,hunger,hunger_alert,food_clamp,hunger_clamp];
-	var work_stuff=[work,gather_path,construct_path,mining_path,soldier_path,craft_path,work_alotment,food_force,construct_force,mining_force,soldier_force,craft_force];//[nat_eff,eff,work]
+	var work_stuff=[work,gather_path,construct_path,mining_path,soldier_path,craft_path,water_path,work_alotment,food_force,construct_force,mining_force,soldier_force,water_force,craft_force];//[nat_eff,eff,work]
 	
 	var constr_paths=[irrigation_path,shelter_path,mine_path,fort_path];
 	var constr_temps=[irrigation_temp,shelter_temp,mine_temp,fort_temp];
@@ -380,7 +391,7 @@ setups.main_sim=function(){
 	var exposure_stuff=[exposure,exposure_alert,exposure_clamp];
 	var food_source_stuff=[hunt_path,farm_path,idle_path,type_of_food,hunt,farm];
 
-	return pop_stuff.concat(water_stuff).concat(food_stuff).concat(work_stuff).concat(mining_stuff).concat(constr_stuff).concat(exposure_stuff).concat(food_source_stuff).concat(craft_stuff);
+	return pop_stuff.concat(food_stuff).concat(work_stuff).concat(water_stuff).concat(mining_stuff).concat(constr_stuff).concat(exposure_stuff).concat(food_source_stuff).concat(craft_stuff);
 }
 
 return setups;
