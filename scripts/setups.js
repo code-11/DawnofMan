@@ -246,13 +246,17 @@ setups.main_sim=function(){
 
 	var weapon_perc   =new flow.Source("Weapon Percent",0);
 	var tool_perc     =new flow.Source("Tool Percent",0);
+	var pot_perc	  =new flow.Source("Pottery Percent",0);
 	var weapon_path   =new flow.Path(weapon_perc,"weapon_path","craft_alot");
 	var tool_path     =new flow.Path(tool_perc,"tool_path","craft_alot");
+	var pot_path 	  =new flow.Path(pot_perc,"pot_path","craft_alot");
 	var weapon_temp   =new flow.Mult("Weapon Rate",0);
 	var tool_temp     =new flow.Mult("Tool Rate"  ,0);
+	var pot_temp	  =new flow.Mult("Potery Rate",0);
 	var weapons       =new flow.Point("Weapons"   ,0);
 	var tools         =new flow.Point("Tools"     ,0);
-	var craft_alotment = new flow.Decision([weapon_path,tool_path],"craft_type","craft_alot");
+	var pottery 	  =new flow.Point("Pottery"   ,10);
+	var craft_alotment = new flow.Decision([weapon_path,tool_path,pot_path],"craft_type","craft_alot");
 
 
 	var hunt_perc= new flow.Source("Hunting Percent" ,0);
@@ -354,6 +358,9 @@ setups.main_sim=function(){
 	craft_force.conn_to(weapon_temp,1);
 	weapon_perc.conn_to(weapon_temp,1);
 	weapon_temp.conn_to(weapons,1);
+	craft_force.conn_to(pot_temp,1);
+	pot_perc.conn_to(pot_temp,1);
+	pot_temp.conn_to(pottery,1);
 
 	//EXPOSURE
 	shelter.conn_to(exposure,-1);
@@ -381,9 +388,9 @@ setups.main_sim=function(){
 	var constructions=[irrigation,shelter,mine,fort];
 	var constr_stuff=constr_paths.concat([constr_alotment]).concat(constr_temps).concat(constructions);
 
-	var craft_paths=[weapon_path,tool_path];
-	var craft_temps=[weapon_temp,tool_temp];
-	var crafts=[weapons,tools];
+	var craft_paths=[weapon_path,tool_path,pot_path];
+	var craft_temps=[weapon_temp,tool_temp,pot_temp];
+	var crafts=[weapons,tools,pottery];
 	var craft_stuff=craft_paths.concat([craft_alotment]).concat(craft_temps).concat(crafts);
 
 	//var constr_stuff=[irrigation_path,shelter_path,mine_path,constr_alotment,irrigation_temp,shelter_temp,mine_temp,irrigation,shelter,mine]
