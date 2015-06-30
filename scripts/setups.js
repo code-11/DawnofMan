@@ -230,9 +230,12 @@ setups.main_sim=function(){
 	var water_perc     =new flow.Source("Water Percent"  ,0);
 	var food_force     =new flow.Mult  ("Food Force"     ,0);
 	var construct_force=new flow.Mult  ("Construct Force",0);
+	var construct_force_eff=new flow.Mult("Tooled Construct Force",0);
 	var mining_force   =new flow.Mult  ("Mining Force",   0);
+	var mining_force_eff=new flow.Mult("Tooled Mining Force",0);
 	var soldier_force  =new flow.Mult  ("Soldier Force",  0);
 	var craft_force    =new flow.Mult  ("Craft Force"  ,  0);
+	var craft_force_eff=new flow.Mult  ("Tooled Craft Force",0);
 	var water_force    =new flow.Mult  ("Water Force"  ,  0);
 	var gather_path    =new flow.Path  (gather_perc,"gather_path","work_alot");
 	var construct_path =new flow.Path  (construct_perc,"construct_path","work_alot");
@@ -254,7 +257,7 @@ setups.main_sim=function(){
 	var tool_temp     =new flow.Mult("Tool Rate"  ,0);
 	var pot_temp	  =new flow.Mult("Potery Rate",0);
 	var weapons       =new flow.Point("Weapons"   ,0);
-	var tools         =new flow.Point("Tools"     ,0);
+	var tools         =new flow.Point("Tools"     ,1);
 	var pottery 	  =new flow.Point("Pottery"   ,10);
 	var craft_alotment = new flow.Decision([weapon_path,tool_path,pot_path],"craft_type","craft_alot");
 
@@ -315,9 +318,6 @@ setups.main_sim=function(){
 	thirst.conn_to(pop,-.1);
 
 	//WORK
-	//pop.conn_to(eff,1);
-	//nat_eff.conn_to(eff,1);
-	//eff.conn_to(work,1);
 	pop.conn_to(work,1);
 	work.conn_to(construct_force,1);
 	work.conn_to(food_force,1);
@@ -332,33 +332,42 @@ setups.main_sim=function(){
 	craft_perc.conn_to(craft_force,1);
 	water_perc.conn_to(water_force,1);
 
+	//ACCOUNT FOR TOOLS
+	mining_force.conn_to(mining_force_eff,1);
+	tools.conn_to(mining_force_eff,.01);
+	construct_force.conn_to(construct_force_eff,1);
+	tools.conn_to(construct_force_eff,.01);
+	craft_force.conn_to(craft_force_eff,1);
+	tools.conn_to(craft_force_eff,.01);
+
+
 	//MINING
-	mining_force.conn_to(mine_limit,1);
+	mining_force_eff.conn_to(mine_limit,1);
 	mine.conn_to(mine_limit,10);
 	mine_limit.conn_to(flint,1);
 
 	//CONSTRUCTION
-	construct_force.conn_to(shelter_temp,1);
+	construct_force_eff.conn_to(shelter_temp,1);
 	shelter_perc.conn_to(shelter_temp,1);
 	shelter_temp.conn_to(shelter,.1);
-	construct_force.conn_to(irrigation_temp,1);
+	construct_force_eff.conn_to(irrigation_temp,1);
 	irrigation_perc.conn_to(irrigation_temp,1);
 	irrigation_temp.conn_to(irrigation,.1);
-	construct_force.conn_to(mine_temp,1);
+	construct_force_eff.conn_to(mine_temp,1);
 	mine_perc.conn_to(mine_temp,1);
 	mine_temp.conn_to(mine,.05);
-	construct_force.conn_to(fort_temp,1);
+	construct_force_eff.conn_to(fort_temp,1);
 	fort_perc.conn_to(fort_temp,1);
 	fort_temp.conn_to(fort,.07);
 
 	//CRAFTWORK
-	craft_force.conn_to(tool_temp,1);
+	craft_force_eff.conn_to(tool_temp,1);
 	tool_perc.conn_to(tool_temp,1);
 	tool_temp.conn_to(tools,1);
-	craft_force.conn_to(weapon_temp,1);
+	craft_force_eff.conn_to(weapon_temp,1);
 	weapon_perc.conn_to(weapon_temp,1);
 	weapon_temp.conn_to(weapons,1);
-	craft_force.conn_to(pot_temp,1);
+	craft_force_eff.conn_to(pot_temp,1);
 	pot_perc.conn_to(pot_temp,1);
 	pot_temp.conn_to(pottery,1);
 
@@ -381,7 +390,7 @@ setups.main_sim=function(){
 	var pop_stuff=[nat_pop_rate,pop_rate,pop_delta,pop,pop_alert,pop_clamp];
 	var water_stuff=[water_inflow,water_env,water_limit,water_inef_alert,water,thirst,thirst_alert,water_clamp,thirst_clamp];
 	var food_stuff=[food,hunger,hunger_alert,food_clamp,hunger_clamp];
-	var work_stuff=[work,gather_path,construct_path,mining_path,soldier_path,craft_path,water_path,work_alotment,food_force,construct_force,mining_force,soldier_force,water_force,craft_force];//[nat_eff,eff,work]
+	var work_stuff=[work,gather_path,construct_path,mining_path,soldier_path,craft_path,water_path,work_alotment,food_force,construct_force,mining_force,soldier_force,water_force,craft_force,construct_force_eff,mining_force_eff,craft_force_eff];//[nat_eff,eff,work]
 	
 	var constr_paths=[irrigation_path,shelter_path,mine_path,fort_path];
 	var constr_temps=[irrigation_temp,shelter_temp,mine_temp,fort_temp];
