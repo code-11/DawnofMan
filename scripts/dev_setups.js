@@ -16,7 +16,7 @@ define(["development","flow"], function (development,flow){
 		food1.config_result(food2,.05);
 		food2.config_result(
 			function(ap){
-				flow.select(ap,"Food Unit").setVal(flow.select(ap,"Food Unit").value-2000)
+				flow.select(ap,"Food Unit").setVal(flow.select(ap,"Food Unit").value-200)
 				food2.addAlert("Some of the food stores have spoiled!");
 			}
 		);

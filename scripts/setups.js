@@ -297,6 +297,8 @@ setups.main_sim=function(){
 	var mine_limit     = new flow.Least("Mine Limit");
 	var flint          = new flow.Point("Flint",0);
 
+	var tool_map	   = new flow.Lerp("Tool Map",0,1000,1,2);
+
 	//BIRTHS
 	pop.conn_to(pop_delta,1);
 	pop_rate.conn_to(pop_delta,1);
@@ -333,13 +335,13 @@ setups.main_sim=function(){
 	water_perc.conn_to(water_force,1);
 
 	//ACCOUNT FOR TOOLS
-	mining_force.conn_to(mining_force_eff,1);
-	tools.conn_to(mining_force_eff,.01);
-	construct_force.conn_to(construct_force_eff,1);
-	tools.conn_to(construct_force_eff,.01);
-	craft_force.conn_to(craft_force_eff,1);
-	tools.conn_to(craft_force_eff,.01);
-
+	tools.conn_to(tool_map,1);
+	mining_force.conn_to(mining_force_eff,.05);
+	tool_map.conn_to(mining_force_eff,1);
+	construct_force.conn_to(construct_force_eff,.05);
+	tool_map.conn_to(construct_force_eff,1);
+	craft_force.conn_to(craft_force_eff,.05);
+	tool_map.conn_to(craft_force_eff,1);
 
 	//MINING
 	mining_force_eff.conn_to(mine_limit,1);
@@ -399,7 +401,7 @@ setups.main_sim=function(){
 
 	var craft_paths=[weapon_path,tool_path,pot_path];
 	var craft_temps=[weapon_temp,tool_temp,pot_temp];
-	var crafts=[weapons,tools,pottery];
+	var crafts=[weapons,tools,tool_map,pottery];
 	var craft_stuff=craft_paths.concat([craft_alotment]).concat(craft_temps).concat(crafts);
 
 	//var constr_stuff=[irrigation_path,shelter_path,mine_path,constr_alotment,irrigation_temp,shelter_temp,mine_temp,irrigation,shelter,mine]

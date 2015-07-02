@@ -138,5 +138,22 @@ comb.choose=function(point){
 		point.prev_value=point.value;
 	}
 }
+comb.lerp=function(point){
+	if (point.conns.length==1){
+		var val_in=point.conns[0][0].value*point.conns[0][1];
+		if (val_in<point.low_val_in){
+			return point.low_val_out;
+		}else if (val_in>point.high_val_in){
+			return point.high_val_out;
+		}else{
+			var m=(point.high_val_out-point.low_val_out)/(point.high_val_in-point.low_val_in);
+			var temp=((val_in-point.high_val_in)*m)+point.high_val_out;
+			console.log("temp "+temp);
+			return temp;
+		}
+	}else{
+		console.log("[Lerp ERROR "+point.name+"] Lerp point can only receive one input!");
+	}
+}
 
 define(comb);

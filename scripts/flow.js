@@ -134,6 +134,23 @@ flow.Dup.prototype=Object.create(flow.Point.prototype);
 flow.Dup.prototype.calc=function(){
 	this.value=comb.dup(this);
 };
+
+flow.Lerp=function(name,low_val_in,high_val_in,low_val_out,high_val_out){
+	this.name=name;
+	this.low_val_in=low_val_in;
+	this.high_val_in=high_val_in;
+	this.low_val_out=low_val_out;
+	this.high_val_out=high_val_out;
+	this.conns=[];
+	this.value=0;
+	this.debug=false;
+	this.disabled=false;
+}
+flow.Lerp.prototype=Object.create(flow.Point.prototype);
+flow.Lerp.prototype.calc=function(){
+	this.value=comb.lerp(this);
+};
+
 flow.Least=function(name){
 	this.name=name;
 	this.value=0;
