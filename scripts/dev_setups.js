@@ -43,6 +43,24 @@ define(["development","flow"], function (development,flow){
 			}
 		);
 
+		var band1= new development.RandSpawn("band1",true,all_points);
+		var band2= new development.End("band2",false,all_points);
+		band1.config_result(band2,.01);
+		band2.config_result(
+			function(ap){
+				var soldiers=flow.select(ap,"Soldier Force").value;
+				if soldiers<10{
+					flow.select(ap,"Pop Unit").setVal(flow.select(ap,"Pop Unit").value*.9);
+					flow.select(ap,"Food Unit").setVal(flow.select(ap,"Food Unit").value*.7);
+					band2.addAlert("A band of foreigners forces their way into town. They kill anyone trying to stop them and take all the food they can lay their hands on.");
+				}else{
+					flow.select(ap,"Weapons").setVal(flow.select(ap,"Weapons").value+20);
+					flow.select(ap,"Pop Unit").setVal(flow.select(ap,"Pop Unit").value+10);
+					band2.addAlert("A band of foreigners attacks your village. However, the skill and training of your warriors is too much for them. Their weapons are confiscated and some are captured");
+				}
+			}
+		); 
+
 		var earth1= new development.RandSpawn("earth1",true,all_points);
 		var earth2= new development.End("earth2",false,all_points);
 
