@@ -235,7 +235,7 @@ flow.Path.prototype.init_input=function(){
 	var temp_in=document.createElement("Input");
 	temp_in.id=this.name;
 	temp_in.type="number";
-	temp_in.value=1;
+	temp_in.value=0;
 	temp_in.className="inline";
 	this.root.appendChild(temp_in);
 	this.input_html=temp_in;
