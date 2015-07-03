@@ -3,7 +3,9 @@ var actions = actions || {};
 
 actions.switch_to=function(main,o_id){
 	$("#"+main).children().css("display","none");
-	$("#"+o_id).css("display","initial");
+	// $("#"+o_id).css("overflow-y","auto");
+	$("#"+o_id).css("display","block");
+
 }
 
 actions.sidebar_to_basic=function(){

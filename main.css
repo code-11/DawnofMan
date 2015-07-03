@@ -3,6 +3,7 @@
       }
       body{
         font-family: 'Shadows Into Light Two', cursive;
+        overflow:hidden;
         /*font-family: helvetica, sans-serif;*/
       }
       html{
@@ -82,19 +83,25 @@
       }
       #mainbar{
         flex:1;
-        height:85vh;
+        height:80vh;
         width:100%;
         margin-left:5vw;
       }
       #event_box{
         width:90%;
-        height:85vh;
+        height:100%;
         margin: 0 2vw;
         overflow:hidden;
         overflow-y:auto;
       }
       #delta-box{
         border-top: 1px solid black;
+      }
+      .hidden{
+        display:hidden;
+      }
+      .reset-hidden{
+        display:initial;
       }
 /*      #events{
         overflow:hidden;

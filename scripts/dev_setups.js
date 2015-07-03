@@ -1,6 +1,24 @@
-define(["development","flow"], function (development,flow){
+define(["development","flow","time"], function (development,flow,time){
 	var  dev_setups = dev_setups ||  {};
 	dev_setups.test=function(all_points){
+
+		var milestone1a= new development.Time("Alive100a",true,all_points);
+		var milestone1b= new development.End("Alive100b",false,all_points); 
+		milestone1a.config_result(100,milestone1b);
+		milestone1b.config_result(
+			function(ap){
+				milestone1a.addAlert("Congratulations, you have managed to have your village survive for 100 Months!");
+			}
+		);
+		var milestone2a= new development.Time("Alive1000a",true,all_points);
+		var milestone2b= new development.End("Alive1000b",false,all_points); 
+		milestone2a.config_result(1000,milestone2b);
+		milestone2b.config_result(
+			function(ap){
+				milestone2a.addAlert("Congratulations, you have managed to have your village survive for 1000 Months!");
+			}
+		);
+
 		var start = new development.Rand("start",true,all_points);
 		var start2= new development.End("start2",false,all_points);
 		start.config_result(start2,1);
@@ -49,7 +67,7 @@ define(["development","flow"], function (development,flow){
 		band2.config_result(
 			function(ap){
 				var soldiers=flow.select(ap,"Soldier Force").value;
-				if soldiers<10{
+				if (soldiers<10){
 					flow.select(ap,"Pop Unit").setVal(flow.select(ap,"Pop Unit").value*.9);
 					flow.select(ap,"Food Unit").setVal(flow.select(ap,"Food Unit").value*.7);
 					band2.addAlert("A band of foreigners forces their way into town. They kill anyone trying to stop them and take all the food they can lay their hands on.");
@@ -74,7 +92,7 @@ define(["development","flow"], function (development,flow){
 			}
 		);
 
-		var stranger= new development.Rand("stranger",true,all_points);
+		var stranger= new development.RandSpawn("stranger",true,all_points);
 		var stranger2= new development.BoolChoice(
 			"stranger2",
 			"A stranger has appeared at the village. \n Should he be accepted?",
@@ -125,7 +143,7 @@ define(["development","flow"], function (development,flow){
 			[strangernogood,  .4]
 		]);
 
-		return [start,start2,food1,food2,pop1,pop2,pop3,pop4,earth1,earth2,stranger,stranger2,strangerno,strangeryes];
+		return [start,start2,food1,food2,pop1,pop2,pop3,pop4,earth1,earth2,stranger,stranger2,strangerno,strangeryes,milestone1a,milestone1b,milestone2a,milestone2b];
 	}
 	return dev_setups;
 });

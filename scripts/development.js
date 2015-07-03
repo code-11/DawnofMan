@@ -78,13 +78,13 @@ development.Rand.prototype.check_results=function(){
 development.RandSpawn=function(alias,start_as_active,all_points){
 	this.alias=alias;
 	this.active=start_as_active;
-	this.all_points=all_points
+	this.all_points=all_points;
 }
 development.RandSpawn.prototype=Object.create(development.Rand.prototype);
 development.RandSpawn.prototype.check_results=function(){
 	var prob=Math.random();
 	console.log(this.alias+"=>prob:"+prob+" threshold:"+this.perc);
-    if (this.perc>prob){
+    if ((this.perc>prob)&&(this.the_result.active==false)){
     	this.the_result.make_active();
     }
 }
@@ -137,8 +137,23 @@ development.RandChoice.prototype.check_results=function(){
 	}
 };
 
-
-
+development.Time=function(alias,start_as_active,all_points){
+	this.alias=alias;
+	this.all_points=all_points;
+	this.active=start_as_active;
+}
+development.Time.prototype=Object.create(development.D_node.prototype);
+development.Time.prototype.config_result=function(active_time,next_node){
+	this.active_time=active_time;
+	this.next_node=next_node;
+}
+development.Time.prototype.enter=function(){};
+development.Time.prototype.check_results=function(){
+	if (time.the_clock.getTime()>this.active_time){
+		this.next_node.make_active();
+		this.active=false;
+	}
+}
 
 development.BoolChoice=function(alias,start_msg,yes_msg,no_msg,start_as_active,all_points){
 	this.alias=alias;
@@ -207,9 +222,12 @@ development.BoolChoice.prototype.check_results=function(){
 		if (this.choice){
 			this.yes_res.make_active();
 			this.active=false;
+			this.choice=undefined;
 		}else{
 			this.no_res.make_active();
 			this.active=false;
+			this.choice=undefined;
+
 		}
 	}
 };
