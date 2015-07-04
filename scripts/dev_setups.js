@@ -35,7 +35,7 @@ define(["development","flow","time"], function (development,flow,time){
 		refugee2.config_result(
 			function(ap){
 				flow.select(ap,"Pop Unit").setVal(flow.select(ap,"Pop Unit").value+30);
-				refugee2.addAlert("Refugees from a distant war steam into your town.");
+				refugee2.addAlert("Refugees from a distant war stream into your town.");
 			}
 		);
 
