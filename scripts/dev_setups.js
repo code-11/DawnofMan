@@ -2,6 +2,15 @@ define(["development","flow","time"], function (development,flow,time){
 	var  dev_setups = dev_setups ||  {};
 	dev_setups.test=function(all_points){
 
+		var milestone0a= new development.Time("Alive0a",true,all_points);
+		var milestone0b= new development.End("Alive0b",false,all_points); 
+		milestone0a.config_result(-1,milestone0b);
+		milestone0b.config_result(
+			function(ap){
+				milestone0a.addAlert("You are the head man of a small village in neolithic time. Do you have what it take to survive and achieve greatness?");
+			}
+		);
+
 		var milestone1a= new development.Time("Alive100a",true,all_points);
 		var milestone1b= new development.End("Alive100b",false,all_points); 
 		milestone1a.config_result(100,milestone1b);
@@ -19,45 +28,14 @@ define(["development","flow","time"], function (development,flow,time){
 			}
 		);
 
-		var start = new development.Rand("start",true,all_points);
-		var start2= new development.End("start2",false,all_points);
-		start.config_result(start2,1);
-		start2.config_result(
-			function(ap){
-				start2.addAlert("You are the head man of a small village in neolithic time. Do you have what it take to survive and achieve greatness?");
-			}
-		);
+		var refugee1= new development.RandSpawn("popgood1",true,all_points);
+		var refugee2= new development.End("popgood2",false,all_points);
 
-		var food1= new development.RandSpawn("food1",true,all_points);
-		var food2= new development.End("food2",false,all_points);
-
-		food1.config_result(food2,.05);
-		food2.config_result(
-			function(ap){
-				flow.select(ap,"Food Unit").setVal(flow.select(ap,"Food Unit").value-200)
-				food2.addAlert("Some of the food stores have spoiled!");
-			}
-		);
-
-		var pop1= new development.RandSpawn("popbad1",true,all_points);
-		var pop2= new development.End("popbad2",false,all_points);
-
-		pop1.config_result(pop2,.05);
-		pop2.config_result(
-			function(ap){
-				flow.select(ap,"Pop Unit").setVal(flow.select(ap,"Pop Unit").value*.5)
-				pop2.addAlert("A deadly disease has hit your village. Bodies line the streets!");
-			}
-		);
-
-		var pop3= new development.RandSpawn("popgood1",true,all_points);
-		var pop4= new development.End("popgood2",false,all_points);
-
-		pop3.config_result(pop4,.05);
-		pop4.config_result(
+		refugee1.config_result(refugee2,.02);
+		refugee2.config_result(
 			function(ap){
 				flow.select(ap,"Pop Unit").setVal(flow.select(ap,"Pop Unit").value+30);
-				pop4.addAlert("Refugees from a distant war steam into your town.");
+				refugee2.addAlert("Refugees from a distant war steam into your town.");
 			}
 		);
 
@@ -79,18 +57,38 @@ define(["development","flow","time"], function (development,flow,time){
 			}
 		); 
 
-		var earth1= new development.RandSpawn("earth1",true,all_points);
-		var earth2= new development.End("earth2",false,all_points);
-
-		earth1.config_result(earth2,.01);
-		earth2.config_result(
+		var nat_disaster=new development.RandSpawn("nat_disaster",true,all_points);
+		var nat_disaster2=new development.RandChoice("nat_disaster2",false,all_points);
+		var earth= new development.End("earth",false,all_points);
+		var food= new development.End("food",false,all_points);
+		var fire= new development.End("fire",false,all_points);
+		nat_disaster.config_result(nat_disaster2,.02);
+		nat_disaster2.config_result([
+			[earth,  1],
+			[food, 1],
+			[fire, 1],
+		]);
+		food.config_result(
 			function(ap){
-				flow.select(ap,"Pop Unit").setVal(flow.select(ap,"Pop Unit").value*.9);
-				flow.select(ap,"Shelter Unit").setVal(flow.select(ap,"Shelter Unit").value*.5);
-				flow.select(ap,"Mine Unit").setVal(flow.select(ap,"Mine Unit").value*.5);
-				earth2.addAlert("The ground shakes terribly. Buildings fall all around. Mines collapse!");
+				flow.select(ap,"Food Unit").setVal(flow.select(ap,"Food Unit").value*.6);
+				food.addAlert("Some of the food stores have spoiled!");
 			}
 		);
+		fire.config_result(
+			function(ap){
+				flow.select(ap,"Shelter Unit").setVal(flow.select(ap,"Shelter Unit").value*.5);
+				fire.addAlert("A horrible fire rages through town!");
+			}
+		);
+		earth.config_result(
+			function(ap){
+				flow.select(ap,"Pop Unit").setVal(flow.select(ap,"Pop Unit").value*.9);
+				flow.select(ap,"Shelter Unit").setVal(flow.select(ap,"Shelter Unit").value*.7);
+				flow.select(ap,"Mine Unit").setVal(flow.select(ap,"Mine Unit").value*.5);
+				earth.addAlert("The ground shakes terribly. Buildings fall all around. Mines collapse!");
+			}
+		);
+
 
 		var stranger= new development.RandSpawn("stranger",true,all_points);
 		var stranger2= new development.BoolChoice(
@@ -107,8 +105,7 @@ define(["development","flow","time"], function (development,flow,time){
 		var strangerno=new development.RandChoice("strangerno","",false,all_points);
 		var strangeryes=new development.RandChoice("strangeryes","",false,all_points);
 
-
-		stranger.config_result(stranger2,.05);
+		stranger.config_result(stranger2,.02);
 		stranger2.config_result(strangeryes,strangerno);
 		strangeryesgood.config_result(
 			function(ap){
@@ -143,7 +140,9 @@ define(["development","flow","time"], function (development,flow,time){
 			[strangernogood,  .4]
 		]);
 
-		return [start,start2,food1,food2,pop1,pop2,pop3,pop4,earth1,earth2,stranger,stranger2,strangerno,strangeryes,milestone1a,milestone1b,milestone2a,milestone2b];
+		var all_nat_disasters=[nat_disaster,nat_disaster2,fire,earth,food,fire];
+
+		return all_nat_disasters.concat([band1,band2,refugee1,refugee2,stranger,stranger2,strangerno,strangeryes,milestone0a,milestone0b,milestone1a,milestone1b,milestone2a,milestone2b]);
 	}
 	return dev_setups;
 });

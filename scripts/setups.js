@@ -210,7 +210,7 @@ setups.main_sim=function(){
 	var work        = new flow.Rate("Work"         ,0);
 	var water       = new flow.Point("Water"        ,1000);
 	var water_env   = new flow.Rate("Available Water",0); 
-	var water_inflow= new flow.Source("Water Inflow",100);
+	var water_inflow= new flow.Source("Water Inflow",1000);
 	var water_clamp = new flow.LowClamp(water,0,0);
 	var water_limit = new flow.Least("Water Limit");
 	var thirst      = new flow.Dup("Thirst"        ,0);
@@ -314,8 +314,8 @@ setups.main_sim=function(){
 	pop.conn_to(water,-1);
 	water_inflow.conn_to(water_env,1);
 	water_env.conn_to(water_limit,1);
-	water_force.conn_to(water_limit,10);
-	water_limit.conn_to(water,1);
+	water_force.conn_to(water_limit,1);
+	water_limit.conn_to(water,10);
 	water.conn_to(thirst,-1);
 	thirst.conn_to(pop,-.1);
 
@@ -351,7 +351,7 @@ setups.main_sim=function(){
 	//CONSTRUCTION
 	construct_force_eff.conn_to(shelter_temp,1);
 	shelter_perc.conn_to(shelter_temp,1);
-	shelter_temp.conn_to(shelter,.1);
+	shelter_temp.conn_to(shelter,.2);
 	construct_force_eff.conn_to(irrigation_temp,1);
 	irrigation_perc.conn_to(irrigation_temp,1);
 	irrigation_temp.conn_to(irrigation,.1);
@@ -383,8 +383,8 @@ setups.main_sim=function(){
 	hunt_perc.conn_to(hunt,1);
 	food_force.conn_to(farm,1);
 	farm_perc.conn_to(farm,1);
-	hunt.conn_to(food,1.5);
-	farm.conn_to(food,1.1);
+	hunt.conn_to(food,1.6);
+	farm.conn_to(food,1.2);
 	hunt.conn_to(pop,-.01);
 	farm.conn_to(water,-.1);
 

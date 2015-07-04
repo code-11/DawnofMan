@@ -252,7 +252,7 @@ flow.Path.prototype.set_all_onlick=function(){
 		}else{
 			var val=1.00;
 			el.disp_html.innerText=val.toFixed(2);
-			el.input_html.value=val;
+			el.input_html.value=100;
 			el.value=val;
 		}
 	}
