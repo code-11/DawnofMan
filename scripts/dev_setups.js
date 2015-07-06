@@ -2,6 +2,61 @@ define(["development","flow","time"], function (development,flow,time){
 	var  dev_setups = dev_setups ||  {};
 	dev_setups.test=function(all_points){
 
+		var attack1 = new development.RandSpawn("attack1",true,all_points);
+		var attack2 = new development.End("attackcheck",true,all_points);
+		var attack3= new development.BoolChoice(
+			"attack3",
+			"Some of the younger warriors are eager to prove themselves. \n There is a small village nearby. Allow your warriors to attack?",
+			"Your warriors attack the village...",
+			"You tell your warriors not to attack the village...",
+			false,
+			all_points);
+		var attackyesgood= new development.End("attackyesgood",false,all_points);
+		var attackyesbad= new development.End("attackyesbad",false,all_points);
+		var attackno= new development.End("attackno",false,all_points);
+		var attackyes= new development.RandChoice("attackyes",false,all_points);
+
+		attack1.config_result(attack2,.03);
+
+		attack2.config_result(
+			function(ap){
+				if (flow.select(ap,"Soldier Force").value>20){
+					attack3.make_active();
+					this.active=false;
+				}
+			}
+		);
+		attack3.config_result(attackyes,attackno);
+		attackyes.config_result([
+			[attackyesgood,.6],
+			[attackyesbad,.4]
+		]);
+		attackno.config_result(
+			function(ap){
+				attackno.addAlert("You admonish the younglings. Now is not the time for war. They return dissapointed, and you are sure this is not the last time they will ask.");
+			}
+		);
+		attackyesgood.config_result(
+			function(ap){
+				var soldiers=flow.select(ap,"Soldier Force");
+				var food=flow.select(ap,"Food Unit");
+				var pop=flow.select(ap,"Pop Unit");
+				pop.setVal(pop.value+soldiers.value*.15);
+				food.setVal(food.value+soldiers.value*.5);
+				attackno.addAlert("The warriors ransack the village, bringing back slaves and food");
+			}
+		);
+		attackyesbad.config_result(
+			function(ap){
+				var soldiers=flow.select(ap,"Soldier Force");
+				var food=flow.select(ap,"Food Unit");
+				var pop=flow.select(ap,"Pop Unit");
+				pop.setVal(pop.value-soldiers.value*.5);
+				attackno.addAlert("The warriors attack the village but are repelled with heavy casualities.");
+			}
+		);
+
+
 		var milestone0a= new development.Time("Alive0a",true,all_points);
 		var milestone0b= new development.End("Alive0b",false,all_points); 
 		milestone0a.config_result(-1,milestone0b);
@@ -141,8 +196,10 @@ define(["development","flow","time"], function (development,flow,time){
 		]);
 
 		var all_nat_disasters=[nat_disaster,nat_disaster2,fire,earth,food,fire];
+		var all_attacks=[attack1,attack2,attack3,attackno,attackyes,attackyesgood,attackyesbad];
+		var all_milestones=[milestone0a,milestone0b,milestone1a,milestone1b,milestone2a,milestone2b];
 
-		return all_nat_disasters.concat([band1,band2,refugee1,refugee2,stranger,stranger2,strangerno,strangeryes,milestone0a,milestone0b,milestone1a,milestone1b,milestone2a,milestone2b]);
+		return all_attacks.concat(all_nat_disasters).concat(all_milestones).concat([band1,band2,refugee1,refugee2,stranger,stranger2,strangerno,strangeryes]);
 	}
 	return dev_setups;
 });
