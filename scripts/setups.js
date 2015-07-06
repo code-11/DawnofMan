@@ -210,7 +210,7 @@ setups.main_sim=function(){
 	var work        = new flow.Rate("Work"         ,0);
 	var water       = new flow.Point("Water"        ,1000);
 	var water_env   = new flow.Rate("Available Water",0); 
-	var water_inflow= new flow.Source("Water Inflow",1000);
+	var water_inflow= new flow.Source("Water Inflow",400);
 	var water_clamp = new flow.LowClamp(water,0,0);
 	var water_limit = new flow.Least("Water Limit");
 	var thirst      = new flow.Dup("Thirst"        ,0);
@@ -255,7 +255,7 @@ setups.main_sim=function(){
 	var pot_path 	  =new flow.Path(pot_perc,"pot_path","craft_alot");
 	var weapon_temp   =new flow.Mult("Weapon Rate",0);
 	var tool_temp     =new flow.Mult("Tool Rate"  ,0);
-	var pot_temp	  =new flow.Mult("Potery Rate",0);
+	var pot_temp	  =new flow.Mult("Pottery Rate",0);
 	var weapons       =new flow.Point("Weapons"   ,0);
 	var tools         =new flow.Point("Tools"     ,1);
 	var pottery 	  =new flow.Point("Pottery"   ,10);
@@ -310,6 +310,7 @@ setups.main_sim=function(){
 	//WATER
 	pop.conn_to(water,-1);
 	water_inflow.conn_to(water_env,1);
+	irrigation.conn_to(water_env,1);
 	water_env.conn_to(water_limit,1);
 	water_force.conn_to(water_limit,10);
 	water_limit.conn_to(water,1);
@@ -335,10 +336,11 @@ setups.main_sim=function(){
 	tools.conn_to(tool_map,1);
 	// mining_force.conn_to(mining_force_eff,.05);
 	// tool_map.conn_to(mining_force_eff,1);
-	construct_force.conn_to(construct_force_eff,.05);
+	construct_force.conn_to(construct_force_eff,.04);
 	tool_map.conn_to(construct_force_eff,1);
-	craft_force.conn_to(craft_force_eff,.05);
+	craft_force.conn_to(craft_force_eff,.04);
 	tool_map.conn_to(craft_force_eff,1);
+	tool_map.conn_to(farm,.9); //Farming is already a mult point.
 
 	//MINING-- DISABLED FOR NOW
 	// mining_force_eff.conn_to(mine_limit,1);
