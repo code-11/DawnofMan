@@ -155,6 +155,27 @@ development.Time.prototype.check_results=function(){
 	}
 }
 
+development.Delay=function(alias,start_as_active,all_points){
+	this.alias=alias;
+	this.all_points=all_points;
+	this.active=start_as_active;
+}
+development.Delay.prototype=Object.create(development.D_node.prototype);
+development.Delay.prototype.config_result=function(delay_time,next_node){
+	this.delay_time=delay_time;
+	this.next_node=next_node;
+}
+development.Delay.prototype.enter=function(){
+	this.then=time.the_clock.getTime();
+}
+development.Delay.prototype.check_results=function(){
+	var elapsed=time.the_clock.getTime()-this.then;
+	if (elapsed>this.delay_time){
+		this.next_node.make_active();
+		this.active=false;
+	}
+}
+
 development.BoolChoice=function(alias,start_msg,yes_msg,no_msg,start_as_active,all_points){
 	this.alias=alias;
 	this.start_msg=start_msg;

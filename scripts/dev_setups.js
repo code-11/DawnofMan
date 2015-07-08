@@ -20,7 +20,7 @@ define(["development","flow","time"], function (development,flow,time){
 
 		attack2.config_result(
 			function(ap){
-				if (flow.select(ap,"Soldier Force").value>20){
+				if (flow.select(ap,"Offense").value>20){
 					attack3.make_active();
 					this.active=false;
 				}
@@ -99,8 +99,8 @@ define(["development","flow","time"], function (development,flow,time){
 		band1.config_result(band2,.01);
 		band2.config_result(
 			function(ap){
-				var soldiers=flow.select(ap,"Soldier Force").value;
-				if (soldiers<10){
+				var defense=flow.select(ap,"Defense").value;
+				if (defense<10){
 					flow.select(ap,"Pop Unit").setVal(flow.select(ap,"Pop Unit").value*.9);
 					flow.select(ap,"Food Unit").setVal(flow.select(ap,"Food Unit").value*.7);
 					band2.addAlert("A band of foreigners forces their way into town. They kill anyone trying to stop them and take all the food they can lay their hands on.");
@@ -195,11 +195,27 @@ define(["development","flow","time"], function (development,flow,time){
 			[strangernogood,  .4]
 		]);
 
+		var harvest1= new development.RandSpawn("harvest1",true,all_points);
+		var harvest2= new development.Delay("harvest2",false,all_points);
+		var harvest3= new development.End("harvest3",false,all_points);
+
+		harvest1.config_result(harvest2,.02);
+		harvest2.config_result(15,harvest3);
+		harvest3.config_result(
+			function(ap){
+				var crops=flow.select(ap,"Farming");
+				var food=flow.select(ap,"Food Unit");
+				food.setVal(food.value+(crops.value)*2);
+				harvest3.addAlert("An exceptional harvest! Food is abundant!");
+			}
+		)
+
+		var all_harvest=[harvest1,harvest2,harvest3];
 		var all_nat_disasters=[nat_disaster,nat_disaster2,fire,earth,food,fire];
 		var all_attacks=[attack1,attack2,attack3,attackno,attackyes,attackyesgood,attackyesbad];
 		var all_milestones=[milestone0a,milestone0b,milestone1a,milestone1b,milestone2a,milestone2b];
 
-		return all_attacks.concat(all_nat_disasters).concat(all_milestones).concat([band1,band2,refugee1,refugee2,stranger,stranger2,strangerno,strangeryes]);
+		return all_attacks.concat(all_nat_disasters).concat(all_harvest).concat(all_milestones).concat([band1,band2,refugee1,refugee2,stranger,stranger2,strangerno,strangeryes]);
 	}
 	return dev_setups;
 });

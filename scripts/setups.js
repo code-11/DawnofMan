@@ -289,6 +289,11 @@ setups.main_sim=function(){
 	var fort_perc      = new flow.Source("Fortification Percent",0);
 	var fort_path      = new flow.Path(fort_perc,"fort_build_path","constr_alot");
 	var constr_alotment= new flow.Decision([shelter_path,irrigation_path, fort_path],"constr_type","constr_alot");/*mine_path,*/
+
+	var offense		   = new flow.Rate("Offense",0);
+	var defense		   = new flow.Mult("Defense",0);
+	var fort_map	   = new flow.Lerp("Fort Map",0,100,1,10);
+
 	
 	// var mine_inef_alert= new flow.GreaterAlert(mining_force,mine,10,"There is not enough space in the mines.");
 	// var mine_limit     = new flow.Least("Mine Limit");
@@ -340,7 +345,7 @@ setups.main_sim=function(){
 	tool_map.conn_to(construct_force_eff,1);
 	craft_force.conn_to(craft_force_eff,.04);
 	tool_map.conn_to(craft_force_eff,1);
-	tool_map.conn_to(farm,.9); //Farming is already a mult point.
+	tool_map.conn_to(farm,1); //Farming is already a mult point.
 
 	//MINING-- DISABLED FOR NOW
 	// mining_force_eff.conn_to(mine_limit,1);
@@ -387,6 +392,14 @@ setups.main_sim=function(){
 	hunt.conn_to(pop,-.01);
 	farm.conn_to(water,-.1);
 
+	//MILITARY 
+	fort.conn_to(fort_map,1);
+	soldier_force.conn_to(defense,.8);
+	fort_map.conn_to(defense,1);
+
+	soldier_force.conn_to(offense,1);
+	weapons.conn_to(offense,.5);
+	hunt.conn_to(offense,.1);
 
 	var pop_stuff=[nat_pop_rate,pop_rate,pop_delta,pop,pop_alert,pop_clamp];
 	var water_stuff=[water_inflow,water_env,water_limit,water_inef_alert,water,thirst,thirst_alert,water_clamp,thirst_clamp];
@@ -403,12 +416,14 @@ setups.main_sim=function(){
 	var crafts=[weapons,tools,tool_map,pottery];
 	var craft_stuff=craft_paths.concat([craft_alotment]).concat(craft_temps).concat(crafts);
 
+	var military_stuff=[fort_map,offense,defense];
+
 	// var mining_stuff=[mine_limit,mine_inef_alert,flint];
 	var exposure_stuff=[exposure,exposure_alert,exposure_clamp];
 	var food_source_stuff=[hunt_path,farm_path,idle_path,type_of_food,hunt,farm];
 
 	// .concat(mining_stuff)
-	return pop_stuff.concat(food_stuff).concat(work_stuff).concat(water_stuff).concat(constr_stuff).concat(exposure_stuff).concat(food_source_stuff).concat(craft_stuff);
+	return pop_stuff.concat(food_stuff).concat(work_stuff).concat(water_stuff).concat(constr_stuff).concat(exposure_stuff).concat(food_source_stuff).concat(craft_stuff).concat(military_stuff);
 }
 
 return setups;
