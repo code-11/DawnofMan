@@ -2,6 +2,103 @@ define(["development","flow","time"], function (development,flow,time){
 	var  dev_setups = dev_setups ||  {};
 	dev_setups.test=function(all_points){
 
+		var neighbor1 = new development.RandSpawn("neighbor1",true,all_points);
+		var neighbor2 = new development.Time("neighbor2",false,all_points);
+		var neighbor3 = new development.BoolChoice(
+			"neighbor3",
+			"You have come into contact with a neighboring village. They could prove a wealthy vassal if conquered or a valuable trade partner. Approach with trade?",
+			"You suggest to the merchants to trade with the vilage...",
+			"You order an assault on the village!",
+			false,
+			all_points
+		);
+		var neighborwar = new development.End("neighborwar",false,all_points);
+		var neighborwarlosedelay = new development.Delay("neighborwarlosedelay",false,all_points);
+		var neighborwarloseattack = new development.End("neighborwarloseattack",false,all_points);
+		var neighborwarwin = new development.End("neighborwarwin",false,all_points);
+
+		var neighbortradedelay = new development.Delay("neighbortrade",false,all_points);
+		var neighbortrade =new development.BoolChoice(
+			"neighbortrade",
+			"The merchants say the village lacks many tradable goods, but for an amount of food and water, the other village can provide workers who will help us construct canals, houses and fortifications. Should we accept?",
+			"We accept their gracious offer",
+			"We reject their offer",
+			false,
+			all_points
+		);
+		var neighbortradeyes =new development.End("neighbortradeyes",false,all_points);
+		var neighbortradeno=new development.End("neighbortradeno",false,all_points);
+
+		neighbor1.config_result(neighbor2,.015);
+		neighbor2.config_result(100,neighbor3);
+		neighbor3.config_result(neighbortradedelay,neighborwar);
+
+		neighborwar.config_result(
+			function (ap){
+				var offense=flow.select(ap,"Offense");
+				var pop=flow.select(ap,"Pop Unit");
+				if (offense>25){
+					neighborwarwin.make_active();
+					this.active=false;
+				}else{
+					neighborwarlosedelay.make_active();
+					this.active=false;
+					pop.setVal(pop.value-(offense.value*.5));
+					neighborwar.addAlert("You have not heard from the warriors in a while...You'd better prepare for a counter attack!");
+				}
+			}
+		);
+		neighborwarlosedelay.config_result(20,neighborwarloseattack);
+		neighborwarloseattack.config_result(
+			function (ap){
+				var defense=flow.select(ap,"Defense");
+				var pop=flow.select(ap,"Pop Unit");
+				if (defense>30){ 
+					neighborwar.addAlert("You manage to beat off the attackers. However, no side really gains from the encounter");
+				}else{
+					pop.setVal(0);
+					neighborwar.addAlert("The attacker break through your defenses. They defeat the last of your warriors and kill almost everyone. You and the rest are rounded up and taken into slavery.");
+				}	
+			}
+		);
+		neighborwarwin.config_result(
+			function (ap){
+				var food=flow.select(ap,"Food Unit");
+				var water=flow.select(ap,"Water");
+				var weapons=flow.select(ap,"Weapons");
+				var tools=flow.select(ap,"tools");
+				var time_factor=time.the_clock.getTime();
+				food.setVal(food.value+time_factor);
+				water.setVal(water.value+time_factor);
+				weapons.setVal(weapons.value+10);
+				tools.setVal(tools.value+10);
+			}
+		);
+
+		neighbortradedelay.config_result(10,neighbortrade);
+		neighbortrade.config_result(neighbortradeyes,neighbortradeno);
+		neighbortradeyes.config_result(
+			function(ap){
+				var food=flow.select(ap,"Food Unit");
+				var water=flow.select(ap,"Water");
+				var shelter=flow.select(ap,"Shelter Unit");
+				var irrigation=flow.select(ap,"Irrigation Unit");
+				var fort=flow.select(ap,"Fort Unit");
+				food.setVal(food.value*.7);
+				water.setVal(water.value*.6);
+				shelter.setVal(shelter.value+30);
+				irrigation.setVal(irrigation.value+20);
+				fort.setVal(fort.value+5);
+				neighbortradeyes.addAlert("Once the work is completed you send back the merchants with the food and water. Your village has benefited greatly in infrastructure.");			
+			}
+		);
+		neighbortradeno.config_result(
+			function(ap){
+				neighbortradeno.addAlert("You send back their messenger dissapointed. Perhaps another time?");
+			}
+
+		);
+
 		var attack1 = new development.RandSpawn("attack1",true,all_points);
 		var attack2 = new development.End("attackcheck",true,all_points);
 		var attack3= new development.BoolChoice(
@@ -20,7 +117,7 @@ define(["development","flow","time"], function (development,flow,time){
 
 		attack2.config_result(
 			function(ap){
-				if (flow.select(ap,"Offense").value>20){
+				if (flow.select(ap,"Offense").value>10){
 					attack3.make_active();
 					this.active=false;
 				}
@@ -214,8 +311,9 @@ define(["development","flow","time"], function (development,flow,time){
 		var all_nat_disasters=[nat_disaster,nat_disaster2,fire,earth,food,fire];
 		var all_attacks=[attack1,attack2,attack3,attackno,attackyes,attackyesgood,attackyesbad];
 		var all_milestones=[milestone0a,milestone0b,milestone1a,milestone1b,milestone2a,milestone2b];
+		var all_neighbors=[neighbor1,neighbor2,neighbor3,neighborwar,neighborwarlosedelay,neighborwarloseattack,neighborwarwin,neighbortradedelay,neighbortrade,neighbortradeyes,neighbortradeno];
 
-		return all_attacks.concat(all_nat_disasters).concat(all_harvest).concat(all_milestones).concat([band1,band2,refugee1,refugee2,stranger,stranger2,strangerno,strangeryes]);
+		return all_attacks.concat(all_nat_disasters).concat(all_harvest).concat(all_milestones).concat([band1,band2,refugee1,refugee2,stranger,stranger2,strangerno,strangeryes]).concat(all_neighbors);
 	}
 	return dev_setups;
 });
