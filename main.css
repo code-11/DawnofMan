@@ -1,115 +1,120 @@
-      h3,p{
-        margin:0px;
-      }
-      body{
-        font-family: 'Shadows Into Light Two', cursive;
-        overflow:hidden;
-        /*font-family: helvetica, sans-serif;*/
-      }
-      html{
-        background-image: url("images/parchment_swatch.jpg");
-        background-repeat: repeat;
-      }
-      #main{
-        width:100%;
-        height:85vh;
-        /*height:100%;*/
-        flex-direction:row;
-        display: flex;
-      }
-      #title{
-        margin: 0 5vw 5vh 0;
-        display: inline-block;
-      }
-      #topbar{
-        display:inline-block;
-      }
-      .topbar-el{
-        display:inline-block;
-        margin-left: 5vw
-      }
-      .topbar-img{
-        height:30px;
-      }
-      #sidebar{
-        margin: 0px;
-        border: 0px;
-        height:85vh;
+h1{
+  font-size:40pt;
+}
+h3,p{
+  margin:0px;
+}
+body{
+  font-family: 'Waiting for the Sunrise', cursive;
+  /*font-family: 'Shadows Into Light Two', cursive;*/
+  font-size: 20pt;
+  overflow:hidden;
+  /*font-family: helvetica, sans-serif;*/
+}
+html{
+  background-image: url("images/parchment_swatch.jpg");
+  background-repeat: repeat;
+}
+#main{
+  width:100%;
+  height:85vh;
+  /*height:100%;*/
+  flex-direction:row;
+  display: flex;
+}
+#title{
+  margin: 0 5vw 5vh 0;
+  display: inline-block;
+}
+#topbar{
+  display:inline-block;
+}
+.topbar-el{
+  display:inline-block;
+  margin-left: 5vw
+}
+.topbar-img{
+  height:30px;
+}
+#sidebar{
+  margin: 0px;
+  border: 0px;
+  height:85vh;
 /*        width:10%;*/
-        float:left;
-      }
-      .sidebar-box{
-        border: 1px solid black; 
-      }
-      .sidebar-img-box{
-        /*background-color:red;*/
-        float:left;
-      }
-      .sidebar-text-box{
-        /*background-color:green;*/
-      }
-      .sidebar-num-box{
-        margin-top:1vh;
-        /*background-color:purple;*/
-        text-align:center;
-      }
-      .sidebar-img{
-        width:30px;
-      }
-      .sidebar-el{
-        border-bottom:1px solid gray;
-        margin-bottom:1vh;
-        overflow:auto;
-        clear:both;
+  float:left;
+}
+.sidebar-box{
+  border: 1px solid black; 
+}
+.sidebar-img-box{
+  /*background-color:red;*/
+  float:left;
+}
+.sidebar-text-box{
+  /*background-color:green;*/
+}
+.sidebar-num-box{
+  margin-top:1vh;
+  /*background-color:purple;*/
+  text-align:center;
+}
+.sidebar-img{
+  width:30px;
+}
+.sidebar-el{
+  border-bottom:1px solid gray;
+  margin-bottom:1vh;
+  overflow:auto;
+  clear:both;
 /*        background-color: red;
 */      }
-      .inline{
-        display:inline-block;
-      }
-      .inline-push{
-        display:inline-block;
-        margin-left:10px;
-      }
-      .choice-el{
-        display:inline-block;
-        vertical-align:text-top;
-        border:1px solid gray;
-        padding: 2px;
-      }
-      .click-actor{
-        font-weight:bold;
-        cursor: pointer; 
-        color: DarkRed;
-      }
-      #mainbar{
-        flex:1;
-        height:80vh;
-        width:100%;
-        margin-left:5vw;
-      }
-      #event_box{
-        width:90%;
-        height:100%;
-        margin: 0 2vw;
-        overflow:hidden;
-        overflow-y:auto;
-      }
-      #delta-box{
-        border-top: 1px solid black;
-      }
-      .hidden{
-        display:hidden;
-      }
-      .reset-hidden{
-        display:initial;
-      }
+.inline{
+  display:inline-block;
+}
+.inline-push{
+  display:inline-block;
+  margin-left:10px;
+}
+.choice-el{
+  display:inline-block;
+  vertical-align:text-top;
+  border:1px solid gray;
+  padding: 2px;
+}
+.click-actor{
+  font-weight:bold;
+  cursor: pointer; 
+  color: DarkRed;
+}
+#mainbar{
+  flex:1;
+  height:80vh;
+  width:100%;
+  margin-left:5vw;
+}
+#event_box{
+  width:90%;
+  height:100%;
+  margin: 0 2vw;
+  overflow:hidden;
+  overflow-y:auto;
+}
+#delta-box{
+  border-top: 1px solid black;
+}
+.hidden{
+  display:hidden;
+}
+.reset-hidden{
+  display:initial;
+}
 /*      #events{
-        overflow:hidden;
-        overflow-y:auto;
-        margin: 2vh 1vw;
-      }*/
-      #house{}
-      #pop{}
-      #food{}
-      #water{}
-      #food_source_link{}
+  overflow:hidden;
+  overflow-y:auto;
+  margin: 2vh 1vw;
+}*/
+#house{}
+#pop{}
+#food{}
+#water{}
+#food_source_link{}
