@@ -1,0 +1,17 @@
+#menu-main{
+	margin:10vh auto 0 auto;
+	width:40%;
+	text-align: center;
+}
+#menu-title{
+	font-size: 60pt;
+	margin: 0px;
+}
+#menu-subtitle{
+	margin-bottom:5vh;
+}
+.menu-link{
+	margin-top:2vh;
+	display: block;
+	text-align:center;
+}
