@@ -15,3 +15,48 @@
 	display: block;
 	text-align:center;
 }
+.menu-img{
+	width: 15vw;
+	position: fixed;
+	bottom:30%;
+}
+#menu-rightimg{
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    right:2vw;
+}
+#menu-leftimg{
+	left:2vw;
+}
+#help-body{
+	overflow-y: scroll;
+}
+#help-body h3{
+	margin-top: 2vh;
+}
+#help-body p{
+	font-family: helvetica;
+	font-size:14pt;
+}
+#help-body h5{
+	margin: 0;
+}
+.help-left{
+	float: left;
+	width:48%;
+}
+.help-right{
+	float: right;
+	width:48%;
+}
+#help-back{
+	position: absolute;
+	top: 0;
+	right:2vw;
+}
+#fatty{
+	padding-top:2vh;
+	clear: both;
+}

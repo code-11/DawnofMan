@@ -85,6 +85,7 @@ html{
   font-weight:bold;
   cursor: pointer; 
   color: DarkRed;
+  text-decoration: none;
 }
 #mainbar{
   flex:1;
