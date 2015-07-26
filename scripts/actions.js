@@ -63,7 +63,9 @@ actions.update_all=function(all_points,all_ids,year){
 			"#weapons":"Weapons",
 			"#tools":"Tools",
 			"#water_env":"Available Water",
-			"#pottery":"Pottery"
+			"#pottery":"Pottery",
+			"#offense":"Offense",
+			"#defense":"Defense"
 	};
 	for (var l=0;l<all_ids.length;l+=1){
 		var id=all_ids[l];
