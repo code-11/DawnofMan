@@ -48,6 +48,12 @@ $(document).ready(function(){
     $("#sidebar-advanced-link").click(function(){
         actions.sidebar_to_advanced();
     });
+    $("#quit_link").click(function(){
+        var quit=confirm("Are you sure you want to quit? Your current game will be lost.");
+        if (quit){
+            window.location="main.html";   
+        }
+    })
     $("#sidebar-advanced").css("display","none");
     $("#food_source").css("display","none");
     $("#work_alot").css("display","none");
